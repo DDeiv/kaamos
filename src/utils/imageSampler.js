@@ -73,16 +73,18 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
                     const nx = (randomPixel.x / width) * 2 - 1
                     const ny = -((randomPixel.y / height) * 2 - 1)
 
-                    // Z-axis Inflation based on density
-                    // Reduced Z-depth slightly to keep the image more readable
-                    const maxZ = randomPixel.weight * 0.3
-                    const z = (Math.random() - 0.5) * maxZ
+                    // FLATTEN Z-AXIS
+                    // To match the image exactly, we remove the "inflation"
+                    // We keep a tiny bit of random Z just to prevent z-fighting/artifacts
+                    // but effectively it's a flat sheet now.
+                    const z = (Math.random() - 0.5) * 0.05
 
-                    // Micro jitter just to prevent aliasing artifacts, but keep it extremely tight
-                    const jitter = 0.0005
+                    // NO JITTER
+                    // We want the particles to be exactly on the pixel grid
+                    const jitter = 0.0
 
-                    positions[count * 3] = (nx + (Math.random() - 0.5) * jitter) * 2.5
-                    positions[count * 3 + 1] = (ny + (Math.random() - 0.5) * jitter) * 2.5
+                    positions[count * 3] = nx * 2.5
+                    positions[count * 3 + 1] = ny * 2.5
                     positions[count * 3 + 2] = z * 2.5
 
                     count++
