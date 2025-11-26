@@ -81,8 +81,11 @@ const OrganicMaterial = {
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
       
-      // Minimal organic movement to keep shape definition
-      vec3 finalPos = mixedPos + normal * noise * 0.08;
+      // Organic wobble during morph: peaks at 0.5 (mid-transition)
+      float morphWobble = sin(uMorphFactor * 3.14159) * 0.3;
+      
+      // Minimal organic movement to keep shape definition + wobble during morph
+      vec3 finalPos = mixedPos + normal * noise * (0.08 + morphWobble);
       
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
       gl_PointSize = 2.5;
@@ -183,7 +186,7 @@ function MorphingShape() {
             // Morphing logic
             if (shapes.length > 0) {
                 // Increment progress
-                const speed = 0.5 // Morph speed
+                const speed = 0.2 // Slower, more organic speed
                 let newProgress = morphProgress + delta * speed
 
                 // Pause threshold: 1.0 is morph complete. 
