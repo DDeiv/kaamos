@@ -111,7 +111,7 @@ const OrganicMaterial = {
   `
 }
 
-function MorphingShape() {
+function MorphingShape({ onLoadComplete }) {
     const meshRef = useRef()
     const materialRef = useRef()
     const [shapes, setShapes] = useState([])
@@ -119,7 +119,7 @@ function MorphingShape() {
     const [nextShapeIndex, setNextShapeIndex] = useState(1)
     const [morphProgress, setMorphProgress] = useState(0)
 
-    const PARTICLE_COUNT = 60000
+    const PARTICLE_COUNT = 40000
 
     // Load shapes on mount
     useEffect(() => {
@@ -137,12 +137,14 @@ function MorphingShape() {
                     shapeUrls.map(url => sampleParticlesFromImage(url, PARTICLE_COUNT))
                 )
                 setShapes(loadedShapes)
+                onLoadComplete?.()
             } catch (err) {
                 console.error("Error loading shapes:", err)
+                onLoadComplete?.()
             }
         }
         loadShapes()
-    }, [])
+    }, [onLoadComplete])
 
     // Geometry setup
     const geometry = useMemo(() => {
@@ -190,8 +192,10 @@ function MorphingShape() {
                 let newProgress = morphProgress + delta * speed
 
                 // Pause threshold: 1.0 is morph complete. 
-                // We let it go up to 2.5, meaning it stays at "1.0" for (1.5 / 0.5) = 3 seconds.
-                const totalCycle = 2.5
+                // We let it go up to 1.5, meaning it stays at "1.0" for (0.5 / 0.2) = 2.5 seconds.
+                // Wait, speed is 0.2. 
+                // If we want 1 second pause: 1.0 + (1.0 * 0.2) = 1.2
+                const totalCycle = 1.2
 
                 if (newProgress >= totalCycle) {
                     // Morph complete + pause complete, switch indices
@@ -223,8 +227,8 @@ function MorphingShape() {
         }
 
         if (meshRef.current) {
-            // Rotation removed
-            meshRef.current.rotation.set(0, 0, 0)
+            // Slow rotation
+            meshRef.current.rotation.y += delta * 0.1
         }
     })
 
@@ -252,13 +256,13 @@ function MorphingShape() {
     )
 }
 
-export default function Scene() {
+export default function Scene({ onLoadComplete }) {
     return (
         <>
             <color attach="background" args={['#050505']} />
             <ambientLight intensity={0.2} />
             <pointLight position={[10, 10, 10]} intensity={1} />
-            <MorphingShape />
+            <MorphingShape onLoadComplete={onLoadComplete} />
             <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
         </>
     )

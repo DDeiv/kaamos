@@ -12,9 +12,9 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
             const ctx = canvas.getContext('2d')
 
             // Scale down for performance if needed, but keeping it reasonable
-            // Increased to 1000 for maximum precision
-            const width = 1000
-            const height = 1000 * (img.height / img.width)
+            // Reduced to 800 for better performance while maintaining good precision
+            const width = 800
+            const height = 800 * (img.height / img.width)
 
             canvas.width = width
             canvas.height = height

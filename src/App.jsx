@@ -4,17 +4,19 @@ import Scene from './components/Scene'
 import Overlay from './components/Overlay'
 
 function App() {
+  const [isLoading, setIsLoading] = React.useState(true)
+
   return (
     <>
       <div className="absolute-full" style={{ zIndex: 0 }}>
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
           <Suspense fallback={null}>
-            <Scene />
+            <Scene onLoadComplete={() => setIsLoading(false)} />
           </Suspense>
         </Canvas>
       </div>
       <div className="absolute-full" style={{ zIndex: 1, pointerEvents: 'none' }}>
-        <Overlay />
+        <Overlay isLoading={isLoading} />
       </div>
     </>
   )

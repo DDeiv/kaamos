@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default function Overlay() {
+export default function Overlay({ isLoading }) {
     return (
         <div className="overlay-container">
             <header className="overlay-header">
@@ -18,10 +18,13 @@ export default function Overlay() {
             </header>
 
             <main className="overlay-main">
-                {/* Scrolling Text */}
-                <div className="scrolling-text">
-                    Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink • Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink •
-                </div>
+                {isLoading ? (
+                    <div className="loading-text">INITIALIZING...</div>
+                ) : (
+                    <div className="scrolling-text">
+                        Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink • Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink •
+                    </div>
+                )}
             </main>
 
             <footer className="overlay-footer">
