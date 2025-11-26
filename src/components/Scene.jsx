@@ -186,8 +186,12 @@ function MorphingShape() {
                 const speed = 0.5 // Morph speed
                 let newProgress = morphProgress + delta * speed
 
-                if (newProgress >= 1) {
-                    // Morph complete, switch indices
+                // Pause threshold: 1.0 is morph complete. 
+                // We let it go up to 2.5, meaning it stays at "1.0" for (1.5 / 0.5) = 3 seconds.
+                const totalCycle = 2.5
+
+                if (newProgress >= totalCycle) {
+                    // Morph complete + pause complete, switch indices
                     newProgress = 0
                     const next = (nextShapeIndex + 1) % shapes.length
 
@@ -205,8 +209,12 @@ function MorphingShape() {
                 }
 
                 setMorphProgress(newProgress)
+
+                // Clamp progress to 1 for the shader so it stays "finished" during the pause
+                const visualProgress = Math.min(newProgress, 1)
+
                 // Smooth step for uMorphFactor
-                const smoothProgress = newProgress * newProgress * (3 - 2 * newProgress)
+                const smoothProgress = visualProgress * visualProgress * (3 - 2 * visualProgress)
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
             }
         }
