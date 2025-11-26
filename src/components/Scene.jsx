@@ -116,7 +116,7 @@ function MorphingShape() {
     const [nextShapeIndex, setNextShapeIndex] = useState(1)
     const [morphProgress, setMorphProgress] = useState(0)
 
-    const PARTICLE_COUNT = 30000
+    const PARTICLE_COUNT = 60000
 
     // Load shapes on mount
     useEffect(() => {

@@ -12,9 +12,9 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
             const ctx = canvas.getContext('2d')
 
             // Scale down for performance if needed, but keeping it reasonable
-            // Increased to 600 for sharper definition of pointy edges
-            const width = 600
-            const height = 600 * (img.height / img.width)
+            // Increased to 1000 for maximum precision
+            const width = 1000
+            const height = 1000 * (img.height / img.width)
 
             canvas.width = width
             canvas.height = height
@@ -41,11 +41,10 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
                 const alphaNorm = a / 255.0
 
                 // Weight depends on darkness and alpha
-                // Linear weight to represent true density
                 const weight = darkness * alphaNorm
 
-                // Lower threshold to catch faint dots
-                if (weight > 0.1) {
+                // Very low threshold to catch even the faintest details
+                if (weight > 0.05) {
                     const pixelIndex = i / 4
                     const x = pixelIndex % width
                     const y = Math.floor(pixelIndex / width)
@@ -68,19 +67,19 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
                 attempts++
                 const randomPixel = validPixels[Math.floor(Math.random() * validPixels.length)]
 
-                // Linear rejection sampling: probability proportional to weight
-                // This ensures particle density matches image density 1:1
+                // Linear rejection sampling
                 if (Math.random() < randomPixel.weight) {
                     // Normalize X, Y to -1 to 1
                     const nx = (randomPixel.x / width) * 2 - 1
                     const ny = -((randomPixel.y / height) * 2 - 1)
 
-                    // Z-axis Inflation based on density (thicker in denser areas)
-                    const maxZ = randomPixel.weight * 0.5
+                    // Z-axis Inflation based on density
+                    // Reduced Z-depth slightly to keep the image more readable
+                    const maxZ = randomPixel.weight * 0.3
                     const z = (Math.random() - 0.5) * maxZ
 
-                    // Minimal jitter
-                    const jitter = 0.002
+                    // Micro jitter just to prevent aliasing artifacts, but keep it extremely tight
+                    const jitter = 0.0005
 
                     positions[count * 3] = (nx + (Math.random() - 0.5) * jitter) * 2.5
                     positions[count * 3 + 1] = (ny + (Math.random() - 0.5) * jitter) * 2.5
