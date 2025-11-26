@@ -77,15 +77,15 @@ const OrganicMaterial = {
       // Mix between current position and target position
       vec3 mixedPos = mix(position, targetPosition, uMorphFactor);
       
-      // Noise based displacement
-      float noise = snoise(mixedPos * 1.5 + uTime * 0.2);
+      // Reduced noise for more defined shapes
+      float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
       
-      // Add some organic movement on top of the shape
-      vec3 finalPos = mixedPos + normal * noise * 0.2;
+      // Minimal organic movement to keep shape definition
+      vec3 finalPos = mixedPos + normal * noise * 0.08;
       
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
-      gl_PointSize = 3.0; // Slightly larger particles
+      gl_PointSize = 2.5;
     }
   `,
     fragmentShader: `
@@ -95,13 +95,15 @@ const OrganicMaterial = {
     void main() {
       vec2 center = gl_PointCoord - 0.5;
       float dist = length(center);
-      float alpha = 1.0 - smoothstep(0.4, 0.5, dist);
+      // Sharper particle edges
+      float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
       
       if (alpha < 0.01) discard;
       
-      vec3 finalColor = uColor + vDisplacement * 0.2;
+      vec3 finalColor = uColor + vDisplacement * 0.1;
       
-      gl_FragColor = vec4(finalColor, alpha * 0.6);
+      // More opaque for better definition
+      gl_FragColor = vec4(finalColor, alpha * 0.85);
     }
   `
 }
@@ -114,7 +116,7 @@ function MorphingShape() {
     const [nextShapeIndex, setNextShapeIndex] = useState(1)
     const [morphProgress, setMorphProgress] = useState(0)
 
-    const PARTICLE_COUNT = 15000
+    const PARTICLE_COUNT = 30000
 
     // Load shapes on mount
     useEffect(() => {
@@ -210,8 +212,8 @@ function MorphingShape() {
         }
 
         if (meshRef.current) {
-            // Slow rotation
-            meshRef.current.rotation.y += delta * 0.1
+            // Rotation removed
+            meshRef.current.rotation.set(0, 0, 0)
         }
     })
 
@@ -246,7 +248,7 @@ export default function Scene() {
             <ambientLight intensity={0.2} />
             <pointLight position={[10, 10, 10]} intensity={1} />
             <MorphingShape />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
         </>
     )
 }
