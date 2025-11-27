@@ -8,15 +8,20 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "vite build && gh-pages -d dist"
+    "deploy": "vite build && gh-pages -d dist",
+    "sanity": "sanity dev",
+    "sanity:deploy": "sanity deploy"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.0",
     "@sanity/client": "^7.13.1",
     "@sanity/image-url": "^1.2.0",
+    "@sanity/vision": "^4.19.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "sanity": "^4.19.0",
+    "styled-components": "^6.1.19",
     "three": "^0.181.2"
   },
   "devDependencies": {

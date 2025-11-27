@@ -18,9 +18,7 @@ export default function Overlay({ isLoading }) {
             </header>
 
             <main className="overlay-main">
-                <div className="scrolling-text">
-                    Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink • Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink •
-                </div>
+                {/* Scrolling text moved to scroll with archive */}
             </main>
 
             <footer className="overlay-footer">

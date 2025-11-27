@@ -32,8 +32,14 @@ function App() {
         </Canvas>
       </div>
 
+      <Overlay />
+
       <div className="scroll-container">
-        <Overlay />
+        <div className="scrolling-text-container">
+          <div className="scrolling-text">
+            KAAMOS LEMME PUT INK UNDER YOUR SKIN • KAAMOS LEMME PUT INK UNDER YOUR SKIN • KAAMOS LEMME PUT INK UNDER YOUR SKIN •
+          </div>
+        </div>
         <Archive />
       </div>
     </>

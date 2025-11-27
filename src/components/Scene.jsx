@@ -2,6 +2,7 @@ import React, { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleParticlesFromImage } from '../utils/imageSampler'
+import { client, urlFor } from '../sanityClient'
 
 // Custom shader for the organic morphing effect
 const OrganicMaterial = {
@@ -93,16 +94,16 @@ const OrganicMaterial = {
       // Minimal organic movement to keep shape definition + wobble during morph
       vec3 finalPos = mixedPos + normal * noise * (0.08 + morphWobble);
 
-      // Mouse interaction - push particles away
-      vec3 toMouse = finalPos - uMouse;
-      float distToMouse = length(toMouse);
-      float pushRadius = 2.0;
+      // Mouse interaction - DISABLED
+      // vec3 toMouse = finalPos - uMouse;
+      // float distToMouse = length(toMouse);
+      // float pushRadius = 2.0;
 
-      if (distToMouse < pushRadius) {
-        float pushForce = (1.0 - distToMouse / pushRadius) * uMouseStrength;
-        pushForce = pow(pushForce, 2.0); // Make the falloff sharper
-        finalPos += normalize(toMouse) * pushForce;
-      }
+      // if (distToMouse < pushRadius) {
+      //   float pushForce = (1.0 - distToMouse / pushRadius) * uMouseStrength;
+      //   pushForce = pow(pushForce, 2.0); // Make the falloff sharper
+      //   finalPos += normalize(toMouse) * pushForce;
+      // }
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
       gl_PointSize = 3.5; // Slightly larger for pastel visibility
@@ -157,33 +158,30 @@ function MorphingShape({ onLoadComplete }) {
 
             try {
                 // Try fetching from Sanity
-                // Assuming schema has a 'particleShape' document with an 'image' field
-                const query = '*[_type == "particleShape"]{ image }'
-                // We need to import client and urlFor inside or outside. 
-                // Since this is a pure component file, let's import them at top.
-                // But wait, I need to add the imports first. 
-                // Let's assume imports are added or I'll add them in a separate edit if needed.
-                // Actually, I can't add imports with this tool call easily if they are at the top.
-                // I will use the MOCK_PARTICLE_SHAPES from sanityClient for now as default
-                // and try to fetch.
+                const query = '*[_type == "particleShape"] | order(order asc) { image }'
+                console.log("Fetching particle shapes from Sanity...")
+                const sanityShapes = await client.fetch(query)
+                console.log("Sanity response:", sanityShapes)
 
-                // For now, let's just use the mock shapes to ensure it works, 
-                // and the logic to fetch can be added if I had the imports.
-                // I'll stick to the plan: "Fetch particle shape images from Sanity".
-                // I need to modify the imports first.
-
-                // RE-STRATEGY: I'll just use the hardcoded list for now but structured to be easily swapped,
-                // or I should have added imports in a previous step.
-                // I will use the existing hardcoded list but wrapped in a try/catch block 
-                // that *would* call Sanity if configured.
-
-                shapeUrls = [
-                    '/shapes/shape1.png',
-                    '/shapes/shape2.png',
-                    '/shapes/shape3.png',
-                    '/shapes/shape4.png',
-                    '/shapes/shape5.png'
-                ]
+                if (sanityShapes && sanityShapes.length > 0) {
+                    // Use Sanity images
+                    shapeUrls = sanityShapes.map(shape => {
+                        const url = urlFor(shape.image).width(800).url()
+                        console.log("Generated shape URL:", url)
+                        return url
+                    })
+                    console.log("Using Sanity particle shapes:", shapeUrls.length, shapeUrls)
+                } else {
+                    // Fallback to local shapes if no Sanity data
+                    console.log("No Sanity particle shapes found, using local shapes")
+                    shapeUrls = [
+                        '/shapes/shape1.png',
+                        '/shapes/shape2.png',
+                        '/shapes/shape3.png',
+                        '/shapes/shape4.png',
+                        '/shapes/shape5.png'
+                    ]
+                }
 
                 const loadedShapes = await Promise.all(
                     shapeUrls.map(url => sampleParticlesFromImage(url, PARTICLE_COUNT))
@@ -191,7 +189,19 @@ function MorphingShape({ onLoadComplete }) {
                 setShapes(loadedShapes)
                 onLoadComplete?.()
             } catch (err) {
-                console.error("Error loading shapes:", err)
+                console.warn("Sanity fetch failed, using local shapes:", err)
+                // Fallback to local shapes on error
+                shapeUrls = [
+                    '/shapes/shape1.png',
+                    '/shapes/shape2.png',
+                    '/shapes/shape3.png',
+                    '/shapes/shape4.png',
+                    '/shapes/shape5.png'
+                ]
+                const loadedShapes = await Promise.all(
+                    shapeUrls.map(url => sampleParticlesFromImage(url, PARTICLE_COUNT))
+                )
+                setShapes(loadedShapes)
                 onLoadComplete?.()
             }
         }
@@ -232,45 +242,45 @@ function MorphingShape({ onLoadComplete }) {
         return geo
     }, [])
 
-    // Mouse and touch move handler
-    useEffect(() => {
-        const updatePosition = (clientX, clientY) => {
-            // Convert position to normalized device coordinates (-1 to +1)
-            const x = (clientX / window.innerWidth) * 2 - 1
-            const y = -(clientY / window.innerHeight) * 2 + 1
+    // Mouse and touch move handler - DISABLED
+    // useEffect(() => {
+    //     const updatePosition = (clientX, clientY) => {
+    //         // Convert position to normalized device coordinates (-1 to +1)
+    //         const x = (clientX / window.innerWidth) * 2 - 1
+    //         const y = -(clientY / window.innerHeight) * 2 + 1
 
-            // Project to 3D space at z=0 plane
-            targetMousePos.current.set(x * 5, y * 5, 0)
-        }
+    //         // Project to 3D space at z=0 plane
+    //         targetMousePos.current.set(x * 5, y * 5, 0)
+    //     }
 
-        const handleMouseMove = (event) => {
-            updatePosition(event.clientX, event.clientY)
-        }
+    //     const handleMouseMove = (event) => {
+    //         updatePosition(event.clientX, event.clientY)
+    //     }
 
-        const handleTouchMove = (event) => {
-            if (event.touches.length > 0) {
-                const touch = event.touches[0]
-                updatePosition(touch.clientX, touch.clientY)
-            }
-        }
+    //     const handleTouchMove = (event) => {
+    //         if (event.touches.length > 0) {
+    //             const touch = event.touches[0]
+    //             updatePosition(touch.clientX, touch.clientY)
+    //         }
+    //     }
 
-        window.addEventListener('mousemove', handleMouseMove)
-        window.addEventListener('touchmove', handleTouchMove, { passive: true })
+    //     window.addEventListener('mousemove', handleMouseMove)
+    //     window.addEventListener('touchmove', handleTouchMove, { passive: true })
 
-        return () => {
-            window.removeEventListener('mousemove', handleMouseMove)
-            window.removeEventListener('touchmove', handleTouchMove)
-        }
-    }, [])
+    //     return () => {
+    //         window.removeEventListener('mousemove', handleMouseMove)
+    //         window.removeEventListener('touchmove', handleTouchMove)
+    //     }
+    // }, [])
 
     // Animation loop
     useFrame((state, delta) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime
 
-            // Smooth mouse following with lerp
-            mousePos.current.lerp(targetMousePos.current, 0.1)
-            materialRef.current.uniforms.uMouse.value.copy(mousePos.current)
+            // Mouse interaction disabled
+            // mousePos.current.lerp(targetMousePos.current, 0.1)
+            // materialRef.current.uniforms.uMouse.value.copy(mousePos.current)
 
             // Morphing logic
             if (shapes.length > 0) {

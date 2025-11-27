@@ -14,13 +14,13 @@ export default function Archive() {
                 if (sanityImages && sanityImages.length > 0) {
                     setImages(sanityImages)
                 } else {
-                    // Fallback to mock data if no Sanity data or error (e.g. unconfigured client)
-                    console.log("Using mock archive data")
-                    setImages(MOCK_ARCHIVE_IMAGES)
+                    // No images uploaded yet
+                    console.log("No archive images found in Sanity")
+                    setImages([])
                 }
             } catch (err) {
-                console.warn("Sanity fetch failed (expected if not configured), using mock data:", err)
-                setImages(MOCK_ARCHIVE_IMAGES)
+                console.error("Failed to fetch archive images:", err)
+                setImages([])
             }
         }
         fetchImages()
@@ -29,20 +29,17 @@ export default function Archive() {
     return (
         <div className="archive-container">
             {images.map((img, index) => {
-                // Random horizontal positioning for "cascade" effect
-                // We'll use a deterministic random based on index to avoid hydration mismatch if possible,
-                // or just simple random for now since it's client-side only.
-                const randomOffset = Math.floor(Math.random() * 40) // 0-40% offset
-                const alignment = index % 2 === 0 ? 'flex-start' : 'flex-end'
+                // More random offset for cascade effect
+                const randomOffsetY = Math.floor(Math.random() * 200) - 100 // -100px to +100px
+                const randomOffsetX = Math.floor(Math.random() * 120) - 60 // -60px to +60px
 
                 return (
                     <div
                         key={img._id}
                         className="archive-item"
                         style={{
-                            alignSelf: alignment,
-                            marginLeft: alignment === 'flex-start' ? `${randomOffset}%` : 0,
-                            marginRight: alignment === 'flex-end' ? `${randomOffset}%` : 0,
+                            marginTop: `${randomOffsetY}px`,
+                            marginLeft: `${randomOffsetX}px`,
                         }}
                     >
                         <img

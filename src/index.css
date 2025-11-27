@@ -27,14 +27,15 @@
 body {
   margin: 0;
   width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  /* Prevent scroll on body, handle in overlay */
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  /* Allow vertical scroll to see archive images */
 }
 
 #root {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
 }
 
 a {
@@ -80,38 +81,55 @@ h6 {
 
 .scroll-container {
   position: relative;
-  z-index: 5;
   width: 100%;
   min-height: 100vh;
-  /* Ensure overlay sits on top of this container's content if needed, 
-     but here Overlay is INSIDE scroll-container. 
-     We want Overlay to be fixed or sticky? 
-     User said "landing page stays there even if images move on top".
-     This implies Overlay (landing page content) should be fixed?
-     Let's make Overlay fixed inside scroll-container or separate?
-     If Overlay is inside scroll-container, it will scroll.
-     Let's adjust Overlay CSS to be fixed if it's meant to stay.
-  */
+  /* No z-index - let children control their own stacking */
+}
+
+.scrolling-text-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 10;
 }
 
 /* Archive Styles */
 .archive-container {
   display: flex;
-  flex-direction: column;
-  gap: 15vh;
-  padding: 100vh 2rem 10vh;
-  /* Start after first screen */
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 6rem;
+  padding: 20vh 6rem 10vh;
+  /* Start closer to scrolling text */
   width: 100%;
-  max-width: 800px;
+  max-width: 1600px;
   margin: 0 auto;
   pointer-events: none;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  z-index: 50;
+  /* Archive images */
   /* Let clicks pass through to canvas if needed, but images have pointer-events: auto */
 }
 
 .archive-item {
-  width: 60%;
+  width: calc(33.333% - 4rem);
+  min-width: 280px;
+  max-width: 500px;
   pointer-events: auto;
   transition: transform 0.3s ease;
+  position: relative;
+  z-index: 50;
+}
+
+.archive-item:hover {
+  transform: scale(1.05) !important;
 }
 
 .archive-item img {
@@ -138,14 +156,16 @@ h6 {
   justify-content: space-between;
   padding: 2rem;
   pointer-events: none;
-  z-index: 10;
-  /* Ensure it stays on top of archive images */
+  /* No z-index on container - children will manage their own */
 }
 
 .overlay-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  position: relative;
+  z-index: 200;
+  /* Header on top of everything including images */
 }
 
 .overlay-header h1 {
@@ -179,6 +199,8 @@ h6 {
   pointer-events: none;
   overflow: hidden;
   position: relative;
+  z-index: 10;
+  /* Scrolling text behind archive images */
 }
 
 .scrolling-text {
@@ -190,6 +212,17 @@ h6 {
   opacity: 0.1;
   animation: scroll 20s linear infinite;
   will-change: transform;
+}
+
+.scrolling-text-bottom {
+  position: relative;
+  width: 100%;
+  height: 20vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-top: 10vh;
+  pointer-events: none;
 }
 
 @keyframes scroll {
@@ -227,6 +260,9 @@ h6 {
   justify-content: space-between;
   align-items: flex-end;
   font-size: 0.875rem;
+  position: relative;
+  z-index: 200;
+  /* Footer on top of everything including images */
 }
 
 .footer-info {
@@ -267,5 +303,19 @@ h6 {
   .footer-copy {
     text-align: left;
     width: 100%;
+  }
+
+  /* Archive mobile styles */
+  .archive-container {
+    flex-direction: column;
+    gap: 4rem;
+    padding: 100vh 1.5rem 10vh;
+    align-items: center;
+  }
+
+  .archive-item {
+    width: 85%;
+    max-width: 400px;
+    min-width: unset;
   }
 }

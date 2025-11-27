@@ -1,10 +1,9 @@
 import { createClient } from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
-// Placeholder configuration - User needs to update these
 export const client = createClient({
-    projectId: 'your-project-id', // Replace with your project ID
-    dataset: 'production',        // Replace with your dataset name
+    projectId: '2z41erz0',
+    dataset: 'production',
     useCdn: true,                 // set to `false` to bypass the edge cache
     apiVersion: '2023-05-03',     // use current date (YYYY-MM-DD) to target the latest API version
 })
