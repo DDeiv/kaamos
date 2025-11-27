@@ -8,7 +8,6 @@ import { sampleParticlesFromImage } from '../utils/imageSampler'
 const OrganicMaterial = {
     uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color('#ffffff') },
         uMorphFactor: { value: 0 }
     },
     vertexShader: `
@@ -17,6 +16,7 @@ const OrganicMaterial = {
     attribute vec3 targetPosition;
     varying vec2 vUv;
     varying float vDisplacement;
+    varying float vSpeed;
 
     // Simplex noise function
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -77,6 +77,9 @@ const OrganicMaterial = {
       // Mix between current position and target position
       vec3 mixedPos = mix(position, targetPosition, uMorphFactor);
       
+      // Calculate speed proxy based on distance to target
+      vSpeed = length(targetPosition - position);
+
       // Reduced noise for more defined shapes
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
@@ -88,12 +91,12 @@ const OrganicMaterial = {
       vec3 finalPos = mixedPos + normal * noise * (0.08 + morphWobble);
       
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
-      gl_PointSize = 2.5;
+      gl_PointSize = 3.5; // Slightly larger for pastel visibility
     }
   `,
     fragmentShader: `
-    uniform vec3 uColor;
     varying float vDisplacement;
+    varying float vSpeed;
 
     void main() {
       vec2 center = gl_PointCoord - 0.5;
@@ -103,10 +106,20 @@ const OrganicMaterial = {
       
       if (alpha < 0.01) discard;
       
-      vec3 finalColor = uColor + vDisplacement * 0.1;
+      // Pastel Colors
+      vec3 pastelGreen = vec3(0.6, 0.9, 0.7);
+      vec3 pastelPink = vec3(1.0, 0.7, 0.85);
+      vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
+      
+      // Create a gradient based on speed and displacement
+      // Speed factor: particles moving further (faster) get different colors
+      float t = smoothstep(0.0, 4.0, vSpeed) + vDisplacement * 0.2;
+      
+      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.5, 1.0, t));
       
       // More opaque for better definition
-      gl_FragColor = vec4(finalColor, alpha * 0.85);
+      gl_FragColor = vec4(finalColor, alpha * 0.9);
     }
   `
 }
@@ -250,7 +263,7 @@ function MorphingShape({ onLoadComplete }) {
                 args={[OrganicMaterial]}
                 transparent
                 depthWrite={false}
-                blending={THREE.AdditiveBlending}
+                blending={THREE.NormalBlending}
             />
         </points>
     )
@@ -259,8 +272,8 @@ function MorphingShape({ onLoadComplete }) {
 export default function Scene({ onLoadComplete }) {
     return (
         <>
-            <color attach="background" args={['#050505']} />
-            <ambientLight intensity={0.2} />
+            <color attach="background" args={['#ffffff']} />
+            <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />
             <MorphingShape onLoadComplete={onLoadComplete} />
             <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />

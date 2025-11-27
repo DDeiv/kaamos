@@ -1,14 +1,14 @@
 :root {
   --font-main: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
-  --color-bg: #050505;
-  --color-text: #ffffff;
-  --color-accent: #ffffff;
+  --color-bg: #ffffff;
+  --color-text: #1a1a1a;
+  --color-accent: #1a1a1a;
 
   font-family: var(--font-main);
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: dark;
+  color-scheme: light;
   color: var(--color-text);
   background-color: var(--color-bg);
 
