@@ -6,7 +6,7 @@ import archiveImage from './sanity_schemas/archiveImage'
 
 export default defineConfig({
   name: 'default',
-  title: 'Molten Tyson',
+  title: 'Kaamos',
 
   projectId: '2z41erz0',
   dataset: 'production',
