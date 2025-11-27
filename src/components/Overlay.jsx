@@ -22,7 +22,7 @@ export default function Overlay({ isLoading }) {
                     <div className="loading-text">INITIALIZING...</div>
                 ) : (
                     <div className="scrolling-text">
-                        Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink • Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink •
+                        KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA •
                     </div>
                 )}
             </main>
