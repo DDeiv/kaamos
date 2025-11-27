@@ -2,6 +2,7 @@ import React, { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import Scene from './components/Scene'
 import Overlay from './components/Overlay'
+import Archive from './components/Archive'
 
 function App() {
   const [isLoading, setIsLoading] = React.useState(true)
@@ -18,9 +19,8 @@ function App() {
   return (
     <>
       <div
-        className="absolute-full"
+        className="fixed-background"
         style={{
-          zIndex: 0,
           opacity: isCanvasVisible ? 1 : 0,
           transition: 'opacity 2.5s ease-in-out'
         }}
@@ -31,8 +31,10 @@ function App() {
           </Suspense>
         </Canvas>
       </div>
-      <div className="absolute-full" style={{ zIndex: 1, pointerEvents: 'none' }}>
-        <Overlay isLoading={isLoading} />
+
+      <div className="scroll-container">
+        <Overlay />
+        <Archive />
       </div>
     </>
   )
