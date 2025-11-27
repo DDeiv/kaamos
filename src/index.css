@@ -278,11 +278,13 @@ h6 {
 @media (max-width: 768px) {
   .overlay-container {
     padding: 1.5rem;
+    z-index: 100 !important;
   }
 
   .overlay-header {
     flex-direction: column;
     gap: 1.5rem;
+    z-index: 200 !important;
   }
 
   .overlay-header ul {
@@ -299,6 +301,7 @@ h6 {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
+    z-index: 200 !important;
   }
 
   .footer-copy {
@@ -310,7 +313,7 @@ h6 {
   .archive-container {
     flex-direction: column;
     gap: 4rem;
-    padding: 20vh 1.5rem 10vh;
+    padding: 10vh 1.5rem 10vh;
     align-items: center;
   }
 
