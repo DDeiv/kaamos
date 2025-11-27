@@ -137,12 +137,13 @@ function MorphingShape({ onLoadComplete }) {
     // Load shapes on mount
     useEffect(() => {
         const loadShapes = async () => {
+            const baseUrl = import.meta.env.BASE_URL
             const shapeUrls = [
-                '/shapes/shape1.png',
-                '/shapes/shape2.png',
-                '/shapes/shape3.png',
-                '/shapes/shape4.png',
-                '/shapes/shape5.png'
+                `${baseUrl}shapes/shape1.png`,
+                `${baseUrl}shapes/shape2.png`,
+                `${baseUrl}shapes/shape3.png`,
+                `${baseUrl}shapes/shape4.png`,
+                `${baseUrl}shapes/shape5.png`
             ]
 
             try {
