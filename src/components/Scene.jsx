@@ -1,7 +1,6 @@
 import React, { useRef, useMemo, useState, useEffect } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
-import { OrbitControls } from '@react-three/drei'
 import { sampleParticlesFromImage } from '../utils/imageSampler'
 
 // Custom shader for the organic morphing effect
@@ -308,7 +307,6 @@ export default function Scene({ onLoadComplete }) {
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />
             <MorphingShape onLoadComplete={onLoadComplete} />
-            <OrbitControls enableZoom={false} enablePan={false} autoRotate={false} />
         </>
     )
 }
