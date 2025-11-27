@@ -5,8 +5,8 @@ export default function Overlay({ isLoading }) {
         <div className="overlay-container">
             <header className="overlay-header">
                 <div>
-                    <h1>MOLTEN TYSON</h1>
-                    <p>NEO-TRIBAL TATTOO ARTIST</p>
+                    <h1>Kaamos</h1>
+                    <p>lemme pin ya skin</p>
                 </div>
                 <nav>
                     <ul>
@@ -29,8 +29,7 @@ export default function Overlay({ isLoading }) {
 
             <footer className="overlay-footer">
                 <div className="footer-info">
-                    <p>Exploring organic forms through ink and skin.</p>
-                    <p>Based in Berlin.</p>
+                    <p>Tattoo artist based in Berlin</p>
                 </div>
                 <div className="footer-copy">
                     <p>© 2024</p>
