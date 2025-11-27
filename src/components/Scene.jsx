@@ -8,11 +8,15 @@ import { sampleParticlesFromImage } from '../utils/imageSampler'
 const OrganicMaterial = {
     uniforms: {
         uTime: { value: 0 },
-        uMorphFactor: { value: 0 }
+        uMorphFactor: { value: 0 },
+        uMouse: { value: new THREE.Vector3() },
+        uMouseStrength: { value: 0.8 }
     },
     vertexShader: `
     uniform float uTime;
     uniform float uMorphFactor;
+    uniform vec3 uMouse;
+    uniform float uMouseStrength;
     attribute vec3 targetPosition;
     varying vec2 vUv;
     varying float vDisplacement;
@@ -73,23 +77,34 @@ const OrganicMaterial = {
 
     void main() {
       vUv = uv;
-      
+
       // Mix between current position and target position
       vec3 mixedPos = mix(position, targetPosition, uMorphFactor);
-      
+
       // Calculate speed proxy based on distance to target
       vSpeed = length(targetPosition - position);
 
       // Reduced noise for more defined shapes
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
-      
+
       // Organic wobble during morph: peaks at 0.5 (mid-transition)
       float morphWobble = sin(uMorphFactor * 3.14159) * 0.3;
-      
+
       // Minimal organic movement to keep shape definition + wobble during morph
       vec3 finalPos = mixedPos + normal * noise * (0.08 + morphWobble);
-      
+
+      // Mouse interaction - push particles away
+      vec3 toMouse = finalPos - uMouse;
+      float distToMouse = length(toMouse);
+      float pushRadius = 2.0;
+
+      if (distToMouse < pushRadius) {
+        float pushForce = (1.0 - distToMouse / pushRadius) * uMouseStrength;
+        pushForce = pow(pushForce, 2.0); // Make the falloff sharper
+        finalPos += normalize(toMouse) * pushForce;
+      }
+
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
       gl_PointSize = 3.5; // Slightly larger for pastel visibility
     }
@@ -131,6 +146,8 @@ function MorphingShape({ onLoadComplete }) {
     const [currentShapeIndex, setCurrentShapeIndex] = useState(0)
     const [nextShapeIndex, setNextShapeIndex] = useState(1)
     const [morphProgress, setMorphProgress] = useState(0)
+    const mousePos = useRef(new THREE.Vector3(0, 0, 5))
+    const targetMousePos = useRef(new THREE.Vector3(0, 0, 5))
 
     const PARTICLE_COUNT = 40000
 
@@ -194,10 +211,29 @@ function MorphingShape({ onLoadComplete }) {
         return geo
     }, [])
 
+    // Mouse move handler
+    useEffect(() => {
+        const handleMouseMove = (event) => {
+            // Convert mouse position to normalized device coordinates (-1 to +1)
+            const x = (event.clientX / window.innerWidth) * 2 - 1
+            const y = -(event.clientY / window.innerHeight) * 2 + 1
+
+            // Project to 3D space at z=0 plane
+            targetMousePos.current.set(x * 5, y * 5, 0)
+        }
+
+        window.addEventListener('mousemove', handleMouseMove)
+        return () => window.removeEventListener('mousemove', handleMouseMove)
+    }, [])
+
     // Animation loop
     useFrame((state, delta) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime
+
+            // Smooth mouse following with lerp
+            mousePos.current.lerp(targetMousePos.current, 0.1)
+            materialRef.current.uniforms.uMouse.value.copy(mousePos.current)
 
             // Morphing logic
             if (shapes.length > 0) {
