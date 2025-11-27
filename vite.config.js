@@ -5,6 +5,7 @@ import { qrcode } from 'vite-plugin-qrcode'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), qrcode()],
+  base: '/kaamos/',
   server: {
     host: true, // Expose to network
     allowedHosts: true
