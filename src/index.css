@@ -156,7 +156,8 @@ h6 {
   justify-content: space-between;
   padding: 2rem;
   pointer-events: none;
-  /* No z-index on container - children will manage their own */
+  z-index: 100 !important;
+  /* Container must have z-index for children's z-index to work globally */
 }
 
 .overlay-header {
@@ -164,7 +165,7 @@ h6 {
   justify-content: space-between;
   align-items: flex-start;
   position: relative;
-  z-index: 200;
+  z-index: 200 !important;
   /* Header on top of everything including images */
 }
 
@@ -261,7 +262,7 @@ h6 {
   align-items: flex-end;
   font-size: 0.875rem;
   position: relative;
-  z-index: 200;
+  z-index: 200 !important;
   /* Footer on top of everything including images */
 }
 
@@ -309,7 +310,7 @@ h6 {
   .archive-container {
     flex-direction: column;
     gap: 4rem;
-    padding: 100vh 1.5rem 10vh;
+    padding: 20vh 1.5rem 10vh;
     align-items: center;
   }
 
