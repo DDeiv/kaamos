@@ -10,13 +10,15 @@ const OrganicMaterial = {
         uTime: { value: 0 },
         uMorphFactor: { value: 0 },
         uMouse: { value: new THREE.Vector3() },
-        uMouseStrength: { value: 0.8 }
+        uMouseStrength: { value: 0.8 },
+        uIsMobile: { value: 0.0 }
     },
     vertexShader: `
     uniform float uTime;
     uniform float uMorphFactor;
     uniform vec3 uMouse;
     uniform float uMouseStrength;
+    uniform float uIsMobile;
     attribute vec3 targetPosition;
     varying vec2 vUv;
     varying float vDisplacement;
@@ -106,7 +108,11 @@ const OrganicMaterial = {
       // }
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
-      gl_PointSize = 3.5; // Slightly larger for pastel visibility
+
+      // Reduce particle size for mobile devices
+      float baseSize = 3.5;
+      float mobileSize = 2.8;
+      gl_PointSize = mix(baseSize, mobileSize, uIsMobile);
     }
   `,
     fragmentShader: `
@@ -125,11 +131,11 @@ const OrganicMaterial = {
       vec3 pastelGreen = vec3(0.6, 0.9, 0.7);
       vec3 pastelPink = vec3(1.0, 0.7, 0.85);
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
-      
+
       // Create a gradient based on speed and displacement
       // Speed factor: particles moving further (faster) get different colors
       float t = smoothstep(0.0, 4.0, vSpeed) + vDisplacement * 0.2;
-      
+
       vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
       finalColor = mix(finalColor, pastelBlue, smoothstep(0.5, 1.0, t));
       
@@ -150,6 +156,12 @@ function MorphingShape({ onLoadComplete }) {
     const targetMousePos = useRef(new THREE.Vector3(0, 0, 5))
 
     const PARTICLE_COUNT = 40000
+
+    // Detect if device is mobile
+    const isMobile = useMemo(() => {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+               window.innerWidth < 768
+    }, [])
 
     // Load shapes on mount
     useEffect(() => {
@@ -277,6 +289,7 @@ function MorphingShape({ onLoadComplete }) {
     useFrame((state, delta) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime
+            materialRef.current.uniforms.uIsMobile.value = isMobile ? 1.0 : 0.0
 
             // Mouse interaction disabled
             // mousePos.current.lerp(targetMousePos.current, 0.1)
