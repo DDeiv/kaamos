@@ -275,11 +275,6 @@ function MorphingShape({ onLoadComplete }) {
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
             }
         }
-
-        if (meshRef.current) {
-            // Slow rotation
-            meshRef.current.rotation.y += delta * 0.1
-        }
     })
 
     // Initial attribute update when shapes load
