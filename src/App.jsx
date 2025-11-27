@@ -22,7 +22,7 @@ function App() {
         style={{
           zIndex: 0,
           opacity: isCanvasVisible ? 1 : 0,
-          transition: 'opacity 1s ease-in-out'
+          transition: 'opacity 2.5s ease-in-out'
         }}
       >
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>

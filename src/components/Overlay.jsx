@@ -18,13 +18,9 @@ export default function Overlay({ isLoading }) {
             </header>
 
             <main className="overlay-main">
-                {isLoading ? (
-                    <div className="loading-text">INITIALIZING...</div>
-                ) : (
-                    <div className="scrolling-text">
-                        KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA • KAAAMOS LET ME PIN YA •
-                    </div>
-                )}
+                <div className="scrolling-text">
+                    Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink • Organic Forms • Neo Tribal • Molten Metal • Flesh & Ink •
+                </div>
             </main>
 
             <footer className="overlay-footer">
