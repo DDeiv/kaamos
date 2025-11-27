@@ -210,19 +210,35 @@ function MorphingShape({ onLoadComplete }) {
         return geo
     }, [])
 
-    // Mouse move handler
+    // Mouse and touch move handler
     useEffect(() => {
-        const handleMouseMove = (event) => {
-            // Convert mouse position to normalized device coordinates (-1 to +1)
-            const x = (event.clientX / window.innerWidth) * 2 - 1
-            const y = -(event.clientY / window.innerHeight) * 2 + 1
+        const updatePosition = (clientX, clientY) => {
+            // Convert position to normalized device coordinates (-1 to +1)
+            const x = (clientX / window.innerWidth) * 2 - 1
+            const y = -(clientY / window.innerHeight) * 2 + 1
 
             // Project to 3D space at z=0 plane
             targetMousePos.current.set(x * 5, y * 5, 0)
         }
 
+        const handleMouseMove = (event) => {
+            updatePosition(event.clientX, event.clientY)
+        }
+
+        const handleTouchMove = (event) => {
+            if (event.touches.length > 0) {
+                const touch = event.touches[0]
+                updatePosition(touch.clientX, touch.clientY)
+            }
+        }
+
         window.addEventListener('mousemove', handleMouseMove)
-        return () => window.removeEventListener('mousemove', handleMouseMove)
+        window.addEventListener('touchmove', handleTouchMove, { passive: true })
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove)
+            window.removeEventListener('touchmove', handleTouchMove)
+        }
     }, [])
 
     // Animation loop
