@@ -136,16 +136,16 @@ const OrganicMaterial = {
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
       // Map smoothed speed to t (0.0 to 1.0)
-      // Lower max speed threshold (3.0) so Blue appears more easily
-      float speedT = smoothstep(0.0, 3.0, vSmoothedSpeed);
-      
+      // Higher threshold (3.5) so colors transition more slowly - more green visible
+      float speedT = smoothstep(0.0, 3.5, vSmoothedSpeed);
+
       // Map noise to [0, 1]
       float noiseT = vDisplacement * 0.5 + 0.5;
-      
+
       // Combine noise and speed
-      // Static (speedT=0): t varies 0.0-0.6 based on noise (Green -> Pink mix)
+      // Static (speedT=0): t varies 0.0-0.5 based on noise (more green range)
       // Moving (speedT>0): t pushes towards 1.0 (Blue)
-      float t = mix(noiseT * 0.6, 1.0, speedT * 0.8);
+      float t = mix(noiseT * 0.5, 1.0, speedT * 0.75);
 
       // Gradient Logic
       // 0.0 - 0.5: Green -> Pink
