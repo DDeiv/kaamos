@@ -79,12 +79,14 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
                     // but effectively it's a flat sheet now.
                     const z = (Math.random() - 0.5) * 0.05
 
-                    // NO JITTER
-                    // We want the particles to be exactly on the pixel grid
-                    const jitter = 0.0
+                    // ADD JITTER
+                    // We add a small random offset to break the grid alignment and prevent "vertical lines" artifacts
+                    const jitterAmount = 1.5 / width // Slightly more than 1 pixel to blur the grid
+                    const jitterX = (Math.random() - 0.5) * jitterAmount
+                    const jitterY = (Math.random() - 0.5) * jitterAmount
 
-                    positions[count * 3] = nx * 2.5
-                    positions[count * 3 + 1] = ny * 2.5
+                    positions[count * 3] = (nx + jitterX) * 2.5
+                    positions[count * 3 + 1] = (ny + jitterY) * 2.5
                     positions[count * 3 + 2] = z * 2.5
 
                     count++

@@ -91,15 +91,12 @@ const OrganicMaterial = {
       // Pass smoothed speed to fragment shader
       vSmoothedSpeed = smoothedSpeed;
 
-      // Reduced noise for sharper, more defined shapes
+      // Noise calculation for color variation only
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
 
-      // Organic wobble during morph: peaks at 0.5 (mid-transition)
-      float morphWobble = sin(uMorphFactor * 3.14159) * 0.15;
-
-      // Minimal organic movement to keep sharp shape definition
-      vec3 finalPos = mixedPos + normal * noise * (0.04 + morphWobble);
+      // No displacement - particles stay exactly within shape boundaries
+      vec3 finalPos = mixedPos;
 
       // Mouse interaction - DISABLED
       // vec3 toMouse = finalPos - uMouse;
@@ -114,9 +111,9 @@ const OrganicMaterial = {
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
 
-      // Reduce particle size for mobile devices
-      float baseSize = 3.5;
-      float mobileSize = 2.8;
+      // Very small particles for ultra-sharp, highly defined shapes
+      float baseSize = 2.2;
+      float mobileSize = 1.8;
       gl_PointSize = mix(baseSize, mobileSize, uIsMobile);
     }
   `,
@@ -140,11 +137,15 @@ const OrganicMaterial = {
 
       // Create a gradient based on smoothed speed and displacement
       // Use smoothed speed for gradual color transitions
-      // Balanced to show more pink with moderate blue
-      float t = smoothstep(0.0, 3.2, vSmoothedSpeed) + vDisplacement * 0.2;
+      // Widen the range to 5.0 for a much slower/smoother transition across speeds
+      float t = smoothstep(0.0, 5.0, vSmoothedSpeed) + vDisplacement * 0.2;
 
-      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.45, 1.0, t));
+      // Overlap the mixing ranges significantly for smoothness
+      // Green -> Pink (0.0 to 0.6)
+      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.6, t));
+      
+      // Pink -> Blue (0.4 to 1.0) - starts mixing blue before pink is fully done
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.4, 1.0, t));
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
@@ -165,11 +166,11 @@ function MorphingShape({ onLoadComplete }) {
     // Detect if device is mobile
     const isMobile = useMemo(() => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-               window.innerWidth < 768
+            window.innerWidth < 768
     }, [])
 
-    // Use 60,000 particles on all devices for consistent quality
-    const PARTICLE_COUNT = 60000
+    // Use 100,000 particles on all devices for optimal detail and performance
+    const PARTICLE_COUNT = 100000
 
     // Load shapes on mount
     useEffect(() => {
@@ -336,6 +337,13 @@ function MorphingShape({ onLoadComplete }) {
                     geometry.attributes.targetPosition.array.set(shapes[next])
                     geometry.attributes.targetPosition.needsUpdate = true
 
+                    // Reset smoothed speeds to prevent artifacts
+                    const smoothedSpeeds = geometry.attributes.smoothedSpeed.array
+                    for (let i = 0; i < PARTICLE_COUNT; i++) {
+                        smoothedSpeeds[i] = 0
+                    }
+                    geometry.attributes.smoothedSpeed.needsUpdate = true
+
                     setCurrentShapeIndex(nextShapeIndex)
                     setNextShapeIndex(next)
                 }
@@ -350,7 +358,8 @@ function MorphingShape({ onLoadComplete }) {
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
 
                 // Update smoothed speed values with lerp for gradual color transitions
-                if (meshRef.current && meshRef.current.geometry) {
+                // Only update during active morphing, not during pause
+                if (meshRef.current && meshRef.current.geometry && visualProgress < 1.0) {
                     const geo = meshRef.current.geometry
                     const positions = geo.attributes.position.array
                     const targetPositions = geo.attributes.targetPosition.array
