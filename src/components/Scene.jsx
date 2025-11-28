@@ -135,21 +135,20 @@ const OrganicMaterial = {
       vec3 pastelPink = vec3(1.0, 0.7, 0.85);
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
-      // Map noise (vDisplacement) from [-1, 1] to [0, 1]
-      float noiseVal = vDisplacement * 0.5 + 0.5;
+      // Map smoothed speed to t
+      // Wider range (0.0 to 8.0) to capture high speeds without clamping too early
+      float t = smoothstep(0.0, 8.0, vSmoothedSpeed);
       
-      // Combine noise and speed for the gradient
-      // Base color comes from noise (so it's colorful even when static)
-      // Speed pushes it towards Blue
-      float t = noiseVal * 0.7 + smoothstep(0.0, 4.0, vSmoothedSpeed) * 0.6;
+      // Add subtle per-particle variation to prevent banding
+      t += vDisplacement * 0.1;
 
-      // Ensure balanced distribution
-      // 0.0 - 0.4: Green -> Pink
-      // 0.4 - 0.8: Pink -> Blue
-      // > 0.8: Blue
+      // Gradient Logic based on Speed
+      // 0.0 - 0.3: Green (Static/Slow)
+      // 0.3 - 0.7: Pink (Moving)
+      // 0.7 - 1.0: Blue (Fast)
       
-      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.1, 0.45, t));
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.45, 0.8, t));
+      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.4, t));
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.4, 0.9, t));
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
@@ -369,7 +368,7 @@ function MorphingShape({ onLoadComplete }) {
                     const targetPositions = geo.attributes.targetPosition.array
                     const smoothedSpeeds = geo.attributes.smoothedSpeed.array
 
-                    const lerpFactor = 0.05 // Lower = smoother transitions (0.05 = ~1 second transition)
+                    const lerpFactor = 0.02 // Lower = smoother transitions (0.02 = ~2.5 second transition)
 
                     for (let i = 0; i < PARTICLE_COUNT; i++) {
                         const idx = i * 3
