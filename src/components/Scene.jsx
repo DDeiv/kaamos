@@ -135,17 +135,21 @@ const OrganicMaterial = {
       vec3 pastelPink = vec3(1.0, 0.7, 0.85);
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
-      // Create a gradient based on smoothed speed and displacement
-      // Use smoothed speed for gradual color transitions
-      // Widen the range to 5.0 for a much slower/smoother transition across speeds
-      float t = smoothstep(0.0, 5.0, vSmoothedSpeed) + vDisplacement * 0.2;
-
-      // Overlap the mixing ranges significantly for smoothness
-      // Green -> Pink (0.0 to 0.6)
-      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.6, t));
+      // Map noise (vDisplacement) from [-1, 1] to [0, 1]
+      float noiseVal = vDisplacement * 0.5 + 0.5;
       
-      // Pink -> Blue (0.4 to 1.0) - starts mixing blue before pink is fully done
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.4, 1.0, t));
+      // Combine noise and speed for the gradient
+      // Base color comes from noise (so it's colorful even when static)
+      // Speed pushes it towards Blue
+      float t = noiseVal * 0.7 + smoothstep(0.0, 4.0, vSmoothedSpeed) * 0.6;
+
+      // Ensure balanced distribution
+      // 0.0 - 0.4: Green -> Pink
+      // 0.4 - 0.8: Pink -> Blue
+      // > 0.8: Blue
+      
+      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.1, 0.45, t));
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.45, 0.8, t));
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
@@ -169,8 +173,8 @@ function MorphingShape({ onLoadComplete }) {
             window.innerWidth < 768
     }, [])
 
-    // Use 100,000 particles on all devices for optimal detail and performance
-    const PARTICLE_COUNT = 100000
+    // Use 120,000 particles (corrected from 1.2M)
+    const PARTICLE_COUNT = 120000
 
     // Load shapes on mount
     useEffect(() => {
