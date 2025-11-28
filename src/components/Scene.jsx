@@ -344,12 +344,8 @@ function MorphingShape({ onLoadComplete }) {
                     geometry.attributes.targetPosition.array.set(shapes[next])
                     geometry.attributes.targetPosition.needsUpdate = true
 
-                    // Reset smoothed speeds to prevent artifacts
-                    const smoothedSpeeds = geometry.attributes.smoothedSpeed.array
-                    for (let i = 0; i < PARTICLE_COUNT; i++) {
-                        smoothedSpeeds[i] = 0
-                    }
-                    geometry.attributes.smoothedSpeed.needsUpdate = true
+                    // Don't reset smoothed speeds - let them transition smoothly
+                    // This prevents sudden color changes when morphing starts
 
                     setCurrentShapeIndex(nextShapeIndex)
                     setNextShapeIndex(next)
