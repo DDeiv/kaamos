@@ -20,9 +20,11 @@ const OrganicMaterial = {
     uniform float uMouseStrength;
     uniform float uIsMobile;
     attribute vec3 targetPosition;
+    attribute float smoothedSpeed;
     varying vec2 vUv;
     varying float vDisplacement;
     varying float vSpeed;
+    varying float vSmoothedSpeed;
 
     // Simplex noise function
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -86,15 +88,18 @@ const OrganicMaterial = {
       // Calculate speed proxy based on distance to target
       vSpeed = length(targetPosition - position);
 
-      // Reduced noise for more defined shapes
+      // Pass smoothed speed to fragment shader
+      vSmoothedSpeed = smoothedSpeed;
+
+      // Reduced noise for sharper, more defined shapes
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
       vDisplacement = noise;
 
       // Organic wobble during morph: peaks at 0.5 (mid-transition)
-      float morphWobble = sin(uMorphFactor * 3.14159) * 0.3;
+      float morphWobble = sin(uMorphFactor * 3.14159) * 0.15;
 
-      // Minimal organic movement to keep shape definition + wobble during morph
-      vec3 finalPos = mixedPos + normal * noise * (0.08 + morphWobble);
+      // Minimal organic movement to keep sharp shape definition
+      vec3 finalPos = mixedPos + normal * noise * (0.04 + morphWobble);
 
       // Mouse interaction - DISABLED
       // vec3 toMouse = finalPos - uMouse;
@@ -118,12 +123,13 @@ const OrganicMaterial = {
     fragmentShader: `
     varying float vDisplacement;
     varying float vSpeed;
+    varying float vSmoothedSpeed;
 
     void main() {
       vec2 center = gl_PointCoord - 0.5;
       float dist = length(center);
-      // Sharper particle edges
-      float alpha = 1.0 - smoothstep(0.3, 0.5, dist);
+      // Much sharper particle edges - tighter smoothstep range
+      float alpha = 1.0 - smoothstep(0.35, 0.45, dist);
       
       if (alpha < 0.01) discard;
       
@@ -132,12 +138,13 @@ const OrganicMaterial = {
       vec3 pastelPink = vec3(1.0, 0.7, 0.85);
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
-      // Create a gradient based on speed and displacement
-      // Speed factor: particles moving further (faster) get different colors
-      float t = smoothstep(0.0, 4.0, vSpeed) + vDisplacement * 0.2;
+      // Create a gradient based on smoothed speed and displacement
+      // Use smoothed speed for gradual color transitions
+      // Balanced to show more pink with moderate blue
+      float t = smoothstep(0.0, 3.2, vSmoothedSpeed) + vDisplacement * 0.2;
 
       vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.5, 1.0, t));
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.45, 1.0, t));
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
@@ -155,13 +162,14 @@ function MorphingShape({ onLoadComplete }) {
     const mousePos = useRef(new THREE.Vector3(0, 0, 5))
     const targetMousePos = useRef(new THREE.Vector3(0, 0, 5))
 
-    const PARTICLE_COUNT = 40000
-
     // Detect if device is mobile
     const isMobile = useMemo(() => {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
                window.innerWidth < 768
     }, [])
+
+    // Use 60,000 particles on all devices for consistent quality
+    const PARTICLE_COUNT = 60000
 
     // Load shapes on mount
     useEffect(() => {
@@ -251,6 +259,13 @@ function MorphingShape({ onLoadComplete }) {
         }
         geo.setAttribute('normal', new THREE.BufferAttribute(normals, 3))
 
+        // Smoothed speed attribute for gradual color transitions
+        const smoothedSpeeds = new Float32Array(PARTICLE_COUNT)
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+            smoothedSpeeds[i] = 0.0
+        }
+        geo.setAttribute('smoothedSpeed', new THREE.BufferAttribute(smoothedSpeeds, 1))
+
         return geo
     }, [])
 
@@ -333,6 +348,29 @@ function MorphingShape({ onLoadComplete }) {
                 // Smooth step for uMorphFactor
                 const smoothProgress = visualProgress * visualProgress * (3 - 2 * visualProgress)
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
+
+                // Update smoothed speed values with lerp for gradual color transitions
+                if (meshRef.current && meshRef.current.geometry) {
+                    const geo = meshRef.current.geometry
+                    const positions = geo.attributes.position.array
+                    const targetPositions = geo.attributes.targetPosition.array
+                    const smoothedSpeeds = geo.attributes.smoothedSpeed.array
+
+                    const lerpFactor = 0.05 // Lower = smoother transitions (0.05 = ~1 second transition)
+
+                    for (let i = 0; i < PARTICLE_COUNT; i++) {
+                        const idx = i * 3
+                        const dx = targetPositions[idx] - positions[idx]
+                        const dy = targetPositions[idx + 1] - positions[idx + 1]
+                        const dz = targetPositions[idx + 2] - positions[idx + 2]
+                        const actualSpeed = Math.sqrt(dx * dx + dy * dy + dz * dz)
+
+                        // Lerp smoothed speed towards actual speed
+                        smoothedSpeeds[i] += (actualSpeed - smoothedSpeeds[i]) * lerpFactor
+                    }
+
+                    geo.attributes.smoothedSpeed.needsUpdate = true
+                }
             }
         }
     })
