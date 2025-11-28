@@ -135,20 +135,24 @@ const OrganicMaterial = {
       vec3 pastelPink = vec3(1.0, 0.7, 0.85);
       vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
-      // Map smoothed speed to t
-      // Wider range (0.0 to 8.0) to capture high speeds without clamping too early
-      float t = smoothstep(0.0, 8.0, vSmoothedSpeed);
+      // Map smoothed speed to t (0.0 to 1.0)
+      // Lower max speed threshold (3.0) so Blue appears more easily
+      float speedT = smoothstep(0.0, 3.0, vSmoothedSpeed);
       
-      // Add subtle per-particle variation to prevent banding
-      t += vDisplacement * 0.1;
+      // Map noise to [0, 1]
+      float noiseT = vDisplacement * 0.5 + 0.5;
+      
+      // Combine noise and speed
+      // Static (speedT=0): t varies 0.0-0.6 based on noise (Green -> Pink mix)
+      // Moving (speedT>0): t pushes towards 1.0 (Blue)
+      float t = mix(noiseT * 0.6, 1.0, speedT * 0.8);
 
-      // Gradient Logic based on Speed
-      // 0.0 - 0.3: Green (Static/Slow)
-      // 0.3 - 0.7: Pink (Moving)
-      // 0.7 - 1.0: Blue (Fast)
+      // Gradient Logic
+      // 0.0 - 0.5: Green -> Pink
+      // 0.5 - 1.0: Pink -> Blue
       
-      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.4, t));
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.4, 0.9, t));
+      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
+      finalColor = mix(finalColor, pastelBlue, smoothstep(0.5, 1.0, t));
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
