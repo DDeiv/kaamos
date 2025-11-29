@@ -324,11 +324,9 @@ function MorphingShape({ onLoadComplete }) {
                 const speed = 0.2 // Slower, more organic speed
                 let newProgress = morphProgress + delta * speed
 
-                // Pause threshold: 1.0 is morph complete. 
-                // We let it go up to 1.5, meaning it stays at "1.0" for (0.5 / 0.2) = 2.5 seconds.
-                // Wait, speed is 0.2. 
-                // If we want 1 second pause: 1.0 + (1.0 * 0.2) = 1.2
-                const totalCycle = 1.2
+                // Pause threshold: 1.0 is morph complete.
+                // Shorter pause: 1.0 + (0.5 * 0.2) = 1.1 (0.5 second pause)
+                const totalCycle = 1.1
 
                 if (newProgress >= totalCycle) {
                     // Morph complete + pause complete, switch indices
