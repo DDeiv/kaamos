@@ -324,9 +324,8 @@ function MorphingShape({ onLoadComplete }) {
                 const speed = 0.2 // Slower, more organic speed
                 let newProgress = morphProgress + delta * speed
 
-                // Pause threshold: 1.0 is morph complete.
-                // Shorter pause: 1.0 + (0.5 * 0.2) = 1.1 (0.5 second pause)
-                const totalCycle = 1.1
+                // No pause - continuous flow
+                const totalCycle = 1.0
 
                 if (newProgress >= totalCycle) {
                     // Morph complete + pause complete, switch indices
@@ -351,8 +350,8 @@ function MorphingShape({ onLoadComplete }) {
 
                 setMorphProgress(newProgress)
 
-                // Clamp progress to 1 for the shader so it stays "finished" during the pause
-                const visualProgress = Math.min(newProgress, 1)
+                // No clamping - continuous flow
+                const visualProgress = newProgress
 
                 // Smooth step for uMorphFactor
                 const smoothProgress = visualProgress * visualProgress * (3 - 2 * visualProgress)
