@@ -142,17 +142,21 @@ const OrganicMaterial = {
       // Map noise to [0, 1]
       float noiseT = vDisplacement * 0.5 + 0.5;
 
-      // Combine noise and speed
-      // Static (speedT=0): t varies 0.0-0.5 based on noise (more green range)
-      // Moving (speedT>0): t pushes towards 1.0 (Blue)
-      float t = mix(noiseT * 0.5, 1.0, speedT * 0.75);
+      // Combine noise and speed for continuous gradient value
+      // Maximum green and blue, minimal pink
+      float t = mix(noiseT * 0.15, 1.0, speedT * 0.9);
 
-      // Gradient Logic
-      // 0.0 - 0.5: Green -> Pink
-      // 0.5 - 1.0: Pink -> Blue
-      
-      vec3 finalColor = mix(pastelGreen, pastelPink, smoothstep(0.0, 0.5, t));
-      finalColor = mix(finalColor, pastelBlue, smoothstep(0.5, 1.0, t));
+      // Continuous three-color gradient with adjusted transition points
+      // t = 0.0-0.55: Green -> Pink (slightly more green range)
+      // t = 0.55-1.0: Pink -> Blue
+      vec3 finalColor;
+      if (t < 0.55) {
+        // Smooth linear interpolation from Green to Pink
+        finalColor = mix(pastelGreen, pastelPink, t * 1.818);
+      } else {
+        // Smooth linear interpolation from Pink to Blue
+        finalColor = mix(pastelPink, pastelBlue, (t - 0.55) * 2.222);
+      }
       
       // More opaque for better definition
       gl_FragColor = vec4(finalColor, alpha * 0.9);
