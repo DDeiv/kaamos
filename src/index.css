@@ -158,6 +158,7 @@ h6 {
   pointer-events: none;
   z-index: 100 !important;
   /* Container must have z-index for children's z-index to work globally */
+  mix-blend-mode: difference;
 }
 
 .overlay-header {
@@ -167,6 +168,7 @@ h6 {
   position: relative;
   z-index: 200 !important;
   /* Header on top of everything including images */
+  color: #ffffff;
 }
 
 .overlay-header h1 {
@@ -264,6 +266,7 @@ h6 {
   position: relative;
   z-index: 200 !important;
   /* Footer on top of everything including images */
+  color: #ffffff;
 }
 
 .footer-info {
@@ -282,14 +285,27 @@ h6 {
   }
 
   .overlay-header {
-    flex-direction: column;
-    gap: 1.5rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
     z-index: 200 !important;
   }
 
-  .overlay-header ul {
-    gap: 1rem;
-    font-size: 0.75rem;
+  .overlay-header nav ul {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5rem;
+  }
+
+  .overlay-header nav ul li:not(:last-child) {
+    display: none;
+  }
+
+  .overlay-header nav ul li:last-child a {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
   }
 
   .scrolling-text {
