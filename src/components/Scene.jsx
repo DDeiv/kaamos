@@ -207,11 +207,11 @@ function MorphingShape({ onLoadComplete }) {
                     // Fallback to local shapes if no Sanity data
                     console.log("No Sanity particle shapes found, using local shapes")
                     shapeUrls = [
-                        '/shapes/shape1.png',
-                        '/shapes/shape2.png',
-                        '/shapes/shape3.png',
-                        '/shapes/shape4.png',
-                        '/shapes/shape5.png'
+                        '/kaamos/shapes/shape1.png',
+                        '/kaamos/shapes/shape2.png',
+                        '/kaamos/shapes/shape3.png',
+                        '/kaamos/shapes/shape4.png',
+                        '/kaamos/shapes/shape5.png'
                     ]
                 }
 
@@ -224,11 +224,11 @@ function MorphingShape({ onLoadComplete }) {
                 console.warn("Sanity fetch failed, using local shapes:", err)
                 // Fallback to local shapes on error
                 shapeUrls = [
-                    '/shapes/shape1.png',
-                    '/shapes/shape2.png',
-                    '/shapes/shape3.png',
-                    '/shapes/shape4.png',
-                    '/shapes/shape5.png'
+                    '/kaamos/shapes/shape1.png',
+                    '/kaamos/shapes/shape2.png',
+                    '/kaamos/shapes/shape3.png',
+                    '/kaamos/shapes/shape4.png',
+                    '/kaamos/shapes/shape5.png'
                 ]
                 const loadedShapes = await Promise.all(
                     shapeUrls.map(url => sampleParticlesFromImage(url, PARTICLE_COUNT))

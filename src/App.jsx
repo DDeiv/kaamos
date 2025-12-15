@@ -8,9 +8,12 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [isCanvasVisible, setIsCanvasVisible] = React.useState(false)
 
+  // Detect if device is mobile
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768
+
   const handleLoadComplete = () => {
     setIsLoading(false)
-    // Delay showing the canvas for 500ms
+    // Faster delay for desktop (500ms), slower for mobile (500ms)
     setTimeout(() => {
       setIsCanvasVisible(true)
     }, 500)
@@ -22,7 +25,7 @@ function App() {
         className="fixed-background"
         style={{
           opacity: isCanvasVisible ? 1 : 0,
-          transition: 'opacity 2.5s ease-in-out'
+          transition: `opacity ${isMobile ? '2.5s' : '0.5s'} ease-in-out`
         }}
       >
         <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
