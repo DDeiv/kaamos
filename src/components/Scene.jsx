@@ -11,7 +11,10 @@ const OrganicMaterial = {
         uMorphFactor: { value: 0 },
         uMouse: { value: new THREE.Vector3() },
         uMouseStrength: { value: 0.8 },
-        uIsMobile: { value: 0.0 }
+        uIsMobile: { value: 0.0 },
+        uColor1: { value: new THREE.Vector3(0.0, 0.0, 0.0) },
+        uColor2: { value: new THREE.Vector3(0.796, 0.027, 0.020) },
+        uColor3: { value: new THREE.Vector3(0.843, 1.0, 0.0) }
     },
     vertexShader: `
     uniform float uTime;
@@ -118,6 +121,9 @@ const OrganicMaterial = {
     }
   `,
     fragmentShader: `
+    uniform vec3 uColor1;
+    uniform vec3 uColor2;
+    uniform vec3 uColor3;
     varying float vDisplacement;
     varying float vSpeed;
     varying float vSmoothedSpeed;
@@ -127,35 +133,28 @@ const OrganicMaterial = {
       float dist = length(center);
       // Much sharper particle edges - tighter smoothstep range
       float alpha = 1.0 - smoothstep(0.35, 0.45, dist);
-      
+
       if (alpha < 0.01) discard;
-      
-      // Pastel Colors
-      vec3 pastelGreen = vec3(0.6, 0.9, 0.7);
-      vec3 pastelPink = vec3(1.0, 0.7, 0.85);
-      vec3 pastelBlue = vec3(0.6, 0.8, 1.0);
 
       // Map smoothed speed to t (0.0 to 1.0)
-      // Higher threshold (3.5) so colors transition more slowly - more green visible
       float speedT = smoothstep(0.0, 3.5, vSmoothedSpeed);
 
       // Map noise to [0, 1]
       float noiseT = vDisplacement * 0.5 + 0.5;
 
       // Combine noise and speed for continuous gradient value
-      // Maximum green and blue, minimal pink
       float t = mix(noiseT * 0.15, 1.0, speedT * 0.9);
 
-      // Continuous three-color gradient with adjusted transition points
-      // t = 0.0-0.55: Green -> Pink (slightly more green range)
-      // t = 0.55-1.0: Pink -> Blue
+      // Continuous three-color gradient using uniform colors
+      // t = 0.0-0.5: Color1 -> Color2
+      // t = 0.5-1.0: Color2 -> Color3
       vec3 finalColor;
-      if (t < 0.55) {
-        // Smooth linear interpolation from Green to Pink
-        finalColor = mix(pastelGreen, pastelPink, t * 1.818);
+      if (t < 0.5) {
+        // Smooth linear interpolation from Color1 to Color2
+        finalColor = mix(uColor1, uColor2, t * 2.0);
       } else {
-        // Smooth linear interpolation from Pink to Blue
-        finalColor = mix(pastelPink, pastelBlue, (t - 0.55) * 2.222);
+        // Smooth linear interpolation from Color2 to Color3
+        finalColor = mix(uColor2, uColor3, (t - 0.5) * 2.0);
       }
       
       // More opaque for better definition
@@ -171,6 +170,7 @@ function MorphingShape({ onLoadComplete }) {
     const [currentShapeIndex, setCurrentShapeIndex] = useState(0)
     const [nextShapeIndex, setNextShapeIndex] = useState(1)
     const [morphProgress, setMorphProgress] = useState(0)
+    const [colors, setColors] = useState(null)
     const mousePos = useRef(new THREE.Vector3(0, 0, 5))
     const targetMousePos = useRef(new THREE.Vector3(0, 0, 5))
 
@@ -182,6 +182,27 @@ function MorphingShape({ onLoadComplete }) {
 
     // Use 120,000 particles (corrected from 1.2M)
     const PARTICLE_COUNT = 120000
+
+    // Load colors from Sanity
+    useEffect(() => {
+        const loadColors = async () => {
+            try {
+                const query = '*[_type == "particleColors" && active == true][0]{ color1, color2, color3 }'
+                console.log("Fetching particle colors from Sanity...")
+                const colorScheme = await client.fetch(query)
+
+                if (colorScheme) {
+                    console.log("Using Sanity colors:", colorScheme)
+                    setColors(colorScheme)
+                } else {
+                    console.log("No active color scheme found, using defaults")
+                }
+            } catch (err) {
+                console.warn("Failed to fetch colors from Sanity:", err)
+            }
+        }
+        loadColors()
+    }, [])
 
     // Load shapes on mount
     useEffect(() => {
@@ -280,6 +301,32 @@ function MorphingShape({ onLoadComplete }) {
 
         return geo
     }, [])
+
+    // Update material colors when fetched from Sanity
+    useEffect(() => {
+        if (materialRef.current && colors) {
+            // Helper function to convert hex to vec3
+            const hexToVec3 = (hex) => {
+                const r = parseInt(hex.substring(1, 3), 16) / 255
+                const g = parseInt(hex.substring(3, 5), 16) / 255
+                const b = parseInt(hex.substring(5, 7), 16) / 255
+                return new THREE.Vector3(r, g, b)
+            }
+
+            if (colors.color1) {
+                materialRef.current.uniforms.uColor1.value = hexToVec3(colors.color1)
+                console.log("Set uColor1 to:", colors.color1)
+            }
+            if (colors.color2) {
+                materialRef.current.uniforms.uColor2.value = hexToVec3(colors.color2)
+                console.log("Set uColor2 to:", colors.color2)
+            }
+            if (colors.color3) {
+                materialRef.current.uniforms.uColor3.value = hexToVec3(colors.color3)
+                console.log("Set uColor3 to:", colors.color3)
+            }
+        }
+    }, [colors])
 
     // Mouse and touch move handler - DISABLED
     // useEffect(() => {

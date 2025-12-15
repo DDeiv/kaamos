@@ -3,6 +3,7 @@ import { deskTool } from 'sanity/desk'
 import { visionTool } from '@sanity/vision'
 import particleShape from './sanity_schemas/particleShape'
 import archiveImage from './sanity_schemas/archiveImage'
+import particleColors from './sanity_schemas/particleColors'
 
 export default defineConfig({
   name: 'default',
@@ -20,6 +21,7 @@ export default defineConfig({
     types: [
       particleShape,
       archiveImage,
+      particleColors,
     ],
   },
 })
