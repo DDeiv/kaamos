@@ -181,7 +181,7 @@ function MorphingShape({ onLoadComplete }) {
     }, [])
 
     // Use 120,000 particles (corrected from 1.2M)
-    const PARTICLE_COUNT = 120000
+    const PARTICLE_COUNT = 150000
 
     // Load colors from Sanity
     useEffect(() => {
