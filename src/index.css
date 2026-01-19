@@ -295,6 +295,10 @@ h6 {
   margin-bottom: 0.1rem;
 }
 
+.footer-text-short {
+  display: none;
+}
+
 .location-button {
   border: 2px solid #ffffff;
   border-radius: 8px;
@@ -314,10 +318,29 @@ h6 {
   text-align: right;
 }
 
+/* Tablet Styles */
+@media (max-width: 1024px) {
+  .footer-text-full {
+    display: none;
+  }
+
+  .footer-text-short {
+    display: inline;
+  }
+
+  .overlay-footer {
+    padding-left: calc(40% + 0.7rem);
+  }
+
+  .overlay-header nav {
+    left: 40%;
+  }
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
   .overlay-container {
-    padding: 1.5rem;
+    padding: 1rem;
     z-index: 100 !important;
   }
 
@@ -325,41 +348,40 @@ h6 {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
-    gap: 1rem;
     z-index: 200 !important;
   }
 
-  .overlay-header nav ul {
-    flex-direction: column;
+  .overlay-header h1 {
+    font-size: 22px;
+    padding-left: 0.3rem;
+  }
+
+  .overlay-header nav {
+    position: relative;
+    left: auto;
+  }
+
+  .overlay-header ul {
     align-items: flex-end;
-    gap: 0.5rem;
   }
 
-  .overlay-header nav ul li:not(:last-child) {
-    display: none;
-  }
-
-  .overlay-header nav ul li:last-child a {
-    font-size: 1.5rem;
-    font-weight: 625;
-    letter-spacing: -0.02em;
+  .overlay-header ul a {
+    font-size: 22px;
   }
 
   .scrolling-text {
-    font-size: 4rem;
-    /* Smaller text on mobile */
+    font-size: 3rem;
   }
 
   .overlay-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    z-index: 200 !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    font-size: 20px;
   }
 
-  .footer-copy {
-    text-align: left;
-    width: 100%;
+  .location-button {
+    font-size: 20px;
   }
 
   /* Archive mobile styles */

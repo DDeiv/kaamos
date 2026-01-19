@@ -12,10 +12,10 @@ export default function Overlay({ isLoading }) {
                         <li><a href="#">GALLERY</a></li>
                     </ul>
                 </nav>
-                <span className="header-year">2025</span>
             </header>
             <footer className="overlay-footer">
-                <span className="footer-text">CURRENTLY POKING IN:</span>
+                <span className="footer-text footer-text-full">CURRENTLY POKING IN:</span>
+                <span className="footer-text footer-text-short">NOW POKING IN:</span>
                 <span className="location-button">BERLIN</span>
             </footer>
         </div>
