@@ -4,6 +4,7 @@ import { visionTool } from '@sanity/vision'
 import particleShape from './sanity_schemas/particleShape'
 import archiveImage from './sanity_schemas/archiveImage'
 import particleColors from './sanity_schemas/particleColors'
+import siteSettings from './sanity_schemas/siteSettings'
 
 export default defineConfig({
   name: 'default',
@@ -22,6 +23,7 @@ export default defineConfig({
       particleShape,
       archiveImage,
       particleColors,
+      siteSettings,
     ],
   },
 })
