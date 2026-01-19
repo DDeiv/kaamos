@@ -32,6 +32,7 @@ export default function Archive() {
                 // More random offset for cascade effect
                 const randomOffsetY = Math.floor(Math.random() * 200) - 100 // -100px to +100px
                 const randomOffsetX = Math.floor(Math.random() * 120) - 60 // -60px to +60px
+                const randomScale = 0.85 + Math.random() * 0.3 // 0.85 to 1.15
 
                 return (
                     <div
@@ -40,6 +41,7 @@ export default function Archive() {
                         style={{
                             marginTop: `${randomOffsetY}px`,
                             marginLeft: `${randomOffsetX}px`,
+                            transform: `scale(${randomScale})`,
                         }}
                     >
                         <img

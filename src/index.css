@@ -6,7 +6,7 @@
 
   font-family: var(--font-main);
   line-height: 1.2;
-  font-weight: 600;
+  font-weight: 625;
   font-size: 27px;
 
   color-scheme: light;
@@ -40,7 +40,7 @@ body {
 }
 
 a {
-  font-weight: 600;
+  font-weight: 625;
   color: inherit;
   text-decoration: none;
 }
@@ -55,7 +55,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 600;
+  font-weight: 625;
   line-height: 1.1;
   text-transform: uppercase;
   /* Swiss style often uses uppercase headers */
@@ -122,9 +122,9 @@ h6 {
 }
 
 .archive-item {
-  width: calc(33.333% - 4rem);
-  min-width: 280px;
-  max-width: 500px;
+  width: calc(45% - 4rem);
+  min-width: 400px;
+  max-width: 750px;
   pointer-events: auto;
   transition: transform 0.3s ease;
   position: relative;
@@ -176,15 +176,16 @@ h6 {
 
 .overlay-header h1 {
   font-size: 27px;
-  font-weight: 600;
+  font-weight: 625;
   letter-spacing: 0.02em;
+  padding-left: 0.5rem;
 }
 
 .header-year {
   position: absolute;
   right: 10%;
   font-size: 27px;
-  font-weight: 600;
+  font-weight: 625;
 }
 
 .overlay-header p {
@@ -209,7 +210,7 @@ h6 {
 
 .overlay-header ul a {
   font-size: 27px;
-  font-weight: 600;
+  font-weight: 625;
 }
 
 .overlay-main {
@@ -227,11 +228,11 @@ h6 {
 .scrolling-text {
   position: absolute;
   white-space: nowrap;
-  font-size: 5rem;
+  font-size: 6.5rem;
   font-weight: 900;
   text-transform: uppercase;
   opacity: 0.1;
-  animation: scroll 20s linear infinite;
+  animation: scroll 30s linear infinite;
   will-change: transform;
 }
 
@@ -258,7 +259,7 @@ h6 {
 
 .loading-text {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 625;
   letter-spacing: 0.1em;
   opacity: 0.5;
   animation: pulse 1.5s ease-in-out infinite;
@@ -280,10 +281,11 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-left: 50%;
+  padding-left: calc(50% + 0.7rem);
   padding-right: 10%;
-  font-size: 27px;
-  font-weight: 600;
+  padding-bottom: 0.7rem;
+  font-size: 25px;
+  font-weight: 625;
   position: relative;
   z-index: 200 !important;
   color: #ffffff;
@@ -339,7 +341,7 @@ h6 {
 
   .overlay-header nav ul li:last-child a {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 625;
     letter-spacing: -0.02em;
   }
 
