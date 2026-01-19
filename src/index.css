@@ -1,12 +1,13 @@
 :root {
-  --font-main: 'Inter', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+  --font-main: 'Darker Grotesque', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
   --color-bg: #ffffff;
   --color-text: #1a1a1a;
   --color-accent: #1a1a1a;
 
   font-family: var(--font-main);
-  line-height: 1.5;
-  font-weight: 400;
+  line-height: 1.2;
+  font-weight: 700;
+  font-size: 35px;
 
   color-scheme: light;
   color: var(--color-text);
@@ -96,6 +97,8 @@ h6 {
   overflow: hidden;
   pointer-events: none;
   z-index: 10;
+  -webkit-mask-image: linear-gradient(to right, transparent 10%, black 40%, black 60%, transparent 90%);
+  mask-image: linear-gradient(to right, transparent 10%, black 40%, black 60%, transparent 90%);
 }
 
 /* Archive Styles */
@@ -154,7 +157,7 @@ h6 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 0.5rem;
   pointer-events: none;
   z-index: 100 !important;
   /* Container must have z-index for children's z-index to work globally */
@@ -172,9 +175,16 @@ h6 {
 }
 
 .overlay-header h1 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 35px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.header-year {
+  position: absolute;
+  right: 10%;
+  font-size: 35px;
+  font-weight: 800;
 }
 
 .overlay-header p {
@@ -184,14 +194,22 @@ h6 {
 }
 
 .overlay-header nav {
+  position: absolute;
+  left: 50%;
   pointer-events: auto;
 }
 
 .overlay-header ul {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
-  font-size: 0.875rem;
+  flex-direction: column;
+  gap: 0.25rem;
+  line-height: 1.1;
+}
+
+.overlay-header ul a {
+  font-size: 35px;
+  font-weight: 800;
 }
 
 .overlay-main {
@@ -209,7 +227,7 @@ h6 {
 .scrolling-text {
   position: absolute;
   white-space: nowrap;
-  font-size: 8rem;
+  font-size: 5rem;
   font-weight: 900;
   text-transform: uppercase;
   opacity: 0.1;
@@ -262,11 +280,28 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  font-size: 0.875rem;
+  padding-left: 50%;
+  padding-right: 10%;
+  font-size: 35px;
+  font-weight: 800;
   position: relative;
   z-index: 200 !important;
-  /* Footer on top of everything including images */
   color: #ffffff;
+}
+
+.footer-text {
+  margin-bottom: 0.1rem;
+}
+
+.location-button {
+  border: 2px solid #ffffff;
+  border-radius: 8px;
+  padding: 0.1em 0.75em 0.2em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
 }
 
 .footer-info {
