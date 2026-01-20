@@ -394,8 +394,8 @@ function MorphingShape({ onLoadComplete }) {
                 // No clamping - continuous flow
                 const visualProgress = newProgress
 
-                // Smooth step for uMorphFactor
-                const smoothProgress = visualProgress * visualProgress * (3 - 2 * visualProgress)
+                // Ease-out curve: starts quick, eases into new shape (mild)
+                const smoothProgress = 1 - Math.pow(1 - visualProgress, 2)
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
 
                 // Update smoothed speed values with lerp for gradual color transitions
