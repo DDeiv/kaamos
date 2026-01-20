@@ -353,7 +353,7 @@ h6 {
 /* Mobile Styles */
 @media (max-width: 890px) {
   .overlay-container {
-    padding: 1rem;
+    padding: 2%;
     z-index: 100 !important;
   }
 
@@ -365,15 +365,17 @@ h6 {
   }
 
   .overlay-header h1 {
-    font-size: 22px;
-    padding-left: 0.3rem;
-    line-height: 1;
+    font-size: 19px;
+    padding: 0;
     margin: 0;
+    margin-top: 0.3rem;
+    line-height: 1;
   }
 
   .overlay-header nav {
     position: relative;
     left: auto;
+    padding-top: 0;
   }
 
   .overlay-header ul {
@@ -383,8 +385,13 @@ h6 {
   }
 
   .overlay-header ul a {
-    font-size: 22px;
+    font-size: 19px;
     line-height: 1;
+  }
+
+  .overlay-header ul li:first-child a {
+    margin-top: 0;
+    display: inline-block;
   }
 
   .footer-text-short {
@@ -400,14 +407,13 @@ h6 {
   }
 
   .overlay-footer {
-    padding-left: 0.3rem;
-    padding-right: 0;
-    padding-bottom: 0.5rem;
-    font-size: 20px;
+    padding: 2%;
+    padding-top: 0;
+    font-size: 17px;
   }
 
   .location-button {
-    font-size: 18px;
+    font-size: 15px;
   }
 
   /* Archive mobile styles */
