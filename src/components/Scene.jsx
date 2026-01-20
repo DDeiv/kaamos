@@ -158,7 +158,7 @@ const OrganicMaterial = {
       }
       
       // More opaque for better definition
-      gl_FragColor = vec4(finalColor, alpha * 0.9);
+      gl_FragColor = vec4(finalColor, alpha * 0.6);
     }
   `
 }
@@ -363,7 +363,7 @@ function MorphingShape({ onLoadComplete }) {
             if (shapes.length > 0) {
                 // Organic speed variation using sine wave for breathing feel
                 const time = state.clock.elapsedTime
-                const breathingSpeed = 0.15 + Math.sin(time * 0.3) * 0.03
+                const breathingSpeed = 0.12 + Math.sin(time * 0.2) * 0.02
                 let newProgress = morphProgress + delta * breathingSpeed
 
                 const totalCycle = 1.0
