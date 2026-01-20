@@ -7,7 +7,7 @@
   font-family: var(--font-main);
   line-height: 1.2;
   font-weight: 550;
-  font-size: 27px;
+  font-size: 32px;
   letter-spacing: -0.035em;
 
   color-scheme: light;
@@ -170,10 +170,11 @@ h6 {
 }
 
 .overlay-header h1 {
-  font-size: 37px;
+  font-size: 42px;
   font-weight: 400;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.05em;
   padding-left: 0;
+  margin-top: -0.15em;
 }
 
 .header-year {
@@ -200,12 +201,12 @@ h6 {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.05rem;
-  line-height: 1;
+  gap: 0;
+  line-height: 0.95;
 }
 
 .overlay-header ul a {
-  font-size: 37px;
+  font-size: 42px;
   font-weight: 400;
 }
 
@@ -280,7 +281,7 @@ h6 {
   padding-left: calc(50% + 0.7rem);
   padding-right: 2%;
   padding-bottom: 0.5rem;
-  font-size: 34px;
+  font-size: 39px;
   font-weight: 400;
   position: relative;
   z-index: 200 !important;
@@ -308,7 +309,7 @@ h6 {
   align-items: center;
   justify-content: center;
   pointer-events: auto;
-  font-size: 25px;
+  font-size: 30px;
 }
 
 .footer-info {
