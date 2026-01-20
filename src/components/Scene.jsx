@@ -457,7 +457,7 @@ function MorphingShape({ onLoadComplete }) {
 export default function Scene({ onLoadComplete }) {
     return (
         <>
-            <color attach="background" args={['#ffffff']} />
+            <color attach="background" args={['#f7f7f7']} />
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />
             <MorphingShape onLoadComplete={onLoadComplete} />
