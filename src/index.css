@@ -278,7 +278,7 @@ h6 {
   justify-content: space-between;
   align-items: flex-end;
   padding-left: calc(50% + 0.7rem);
-  padding-right: 10%;
+  padding-right: 2%;
   padding-bottom: 0.5rem;
   font-size: 34px;
   font-weight: 400;
@@ -308,6 +308,7 @@ h6 {
   align-items: center;
   justify-content: center;
   pointer-events: auto;
+  font-size: 30px;
 }
 
 .footer-info {
@@ -319,7 +320,7 @@ h6 {
 }
 
 /* Tablet Styles */
-@media (max-width: 1220px) {
+@media (max-width: 1150px) {
   .footer-text-full {
     display: none;
   }
@@ -398,14 +399,14 @@ h6 {
   }
 
   .overlay-footer {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.3rem;
+    padding-right: 0;
     padding-bottom: 0.5rem;
     font-size: 20px;
   }
 
   .location-button {
-    font-size: 20px;
+    font-size: 18px;
   }
 
   /* Archive mobile styles */
