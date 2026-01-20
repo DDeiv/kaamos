@@ -361,29 +361,22 @@ function MorphingShape({ onLoadComplete }) {
 
             // Morphing logic
             if (shapes.length > 0) {
-                // Increment progress
-                const speed = 0.2 // Slower, more organic speed
-                let newProgress = morphProgress + delta * speed
+                // Organic speed variation using sine wave for breathing feel
+                const time = state.clock.elapsedTime
+                const breathingSpeed = 0.15 + Math.sin(time * 0.3) * 0.03
+                let newProgress = morphProgress + delta * breathingSpeed
 
-                // No pause - continuous flow
                 const totalCycle = 1.0
 
                 if (newProgress >= totalCycle) {
-                    // Morph complete + pause complete, switch indices
                     newProgress = 0
                     const next = (nextShapeIndex + 1) % shapes.length
 
-                    // Update attributes
-                    // Current position becomes what was the target
                     geometry.attributes.position.array.set(shapes[nextShapeIndex])
                     geometry.attributes.position.needsUpdate = true
 
-                    // New target
                     geometry.attributes.targetPosition.array.set(shapes[next])
                     geometry.attributes.targetPosition.needsUpdate = true
-
-                    // Don't reset smoothed speeds - let them transition smoothly
-                    // This prevents sudden color changes when morphing starts
 
                     setCurrentShapeIndex(nextShapeIndex)
                     setNextShapeIndex(next)
@@ -391,16 +384,13 @@ function MorphingShape({ onLoadComplete }) {
 
                 setMorphProgress(newProgress)
 
-                // No clamping - continuous flow
-                const visualProgress = newProgress
-
-                // Ease-out curve: starts quick, eases into new shape (mild)
-                const smoothProgress = 1 - Math.pow(1 - visualProgress, 2)
+                // Simple smooth easing
+                const t = newProgress
+                const smoothProgress = t * t * (3 - 2 * t)
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
 
                 // Update smoothed speed values with lerp for gradual color transitions
-                // Only update during active morphing, not during pause
-                if (meshRef.current && meshRef.current.geometry && visualProgress < 1.0) {
+                if (meshRef.current && meshRef.current.geometry && newProgress < 1.0) {
                     const geo = meshRef.current.geometry
                     const positions = geo.attributes.position.array
                     const targetPositions = geo.attributes.targetPosition.array
