@@ -25,15 +25,16 @@ export default function Overlay({ isLoading }) {
                 <h1>KAAMOS</h1>
                 <nav>
                     <ul>
-                        <li><a href="#">BOOK</a></li>
-                        <li><a href="#">INFO</a></li>
-                        <li><a href="#">GALLERY</a></li>
+                        <li><a href="#">BOOK A TATTOO</a></li>
+                        <li><a href="#">PREVIOUS WORK</a></li>
+                        <li><a href="#">AVAILABLE DESIGNS</a></li>
+                        <li><a href="#">INFO & ABOUT</a></li>
                     </ul>
                 </nav>
             </header>
             <footer className="overlay-footer">
-                <span className="footer-text footer-text-full">CURRENTLY POKING IN:</span>
-                <span className="footer-text footer-text-short">NOW POKING IN:</span>
+                <span className="footer-text footer-text-full">NOW POKING IN:</span>
+                <span className="footer-text footer-text-short">NOW IN:</span>
                 <span className="location-button">{location}</span>
             </footer>
         </div>

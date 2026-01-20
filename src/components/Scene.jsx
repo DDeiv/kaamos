@@ -302,31 +302,6 @@ function MorphingShape({ onLoadComplete }) {
         return geo
     }, [])
 
-    // Update material colors when fetched from Sanity
-    useEffect(() => {
-        if (materialRef.current && colors) {
-            // Helper function to convert hex to vec3
-            const hexToVec3 = (hex) => {
-                const r = parseInt(hex.substring(1, 3), 16) / 255
-                const g = parseInt(hex.substring(3, 5), 16) / 255
-                const b = parseInt(hex.substring(5, 7), 16) / 255
-                return new THREE.Vector3(r, g, b)
-            }
-
-            if (colors.color1) {
-                materialRef.current.uniforms.uColor1.value = hexToVec3(colors.color1)
-                console.log("Set uColor1 to:", colors.color1)
-            }
-            if (colors.color2) {
-                materialRef.current.uniforms.uColor2.value = hexToVec3(colors.color2)
-                console.log("Set uColor2 to:", colors.color2)
-            }
-            if (colors.color3) {
-                materialRef.current.uniforms.uColor3.value = hexToVec3(colors.color3)
-                console.log("Set uColor3 to:", colors.color3)
-            }
-        }
-    }, [colors])
 
     // Mouse and touch move handler - DISABLED
     // useEffect(() => {
@@ -359,11 +334,26 @@ function MorphingShape({ onLoadComplete }) {
     //     }
     // }, [])
 
+    // Helper function to convert hex to vec3
+    const hexToVec3 = (hex) => {
+        const r = parseInt(hex.substring(1, 3), 16) / 255
+        const g = parseInt(hex.substring(3, 5), 16) / 255
+        const b = parseInt(hex.substring(5, 7), 16) / 255
+        return new THREE.Vector3(r, g, b)
+    }
+
     // Animation loop
     useFrame((state, delta) => {
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime
             materialRef.current.uniforms.uIsMobile.value = isMobile ? 1.0 : 0.0
+
+            // Apply colors every frame to ensure they stick
+            if (colors) {
+                if (colors.color1) materialRef.current.uniforms.uColor1.value = hexToVec3(colors.color1)
+                if (colors.color2) materialRef.current.uniforms.uColor2.value = hexToVec3(colors.color2)
+                if (colors.color3) materialRef.current.uniforms.uColor3.value = hexToVec3(colors.color3)
+            }
 
             // Mouse interaction disabled
             // mousePos.current.lerp(targetMousePos.current, 0.1)
@@ -445,8 +435,13 @@ function MorphingShape({ onLoadComplete }) {
         }
     }, [shapes, geometry])
 
+    // Scale factor - bigger on desktop, normal on mobile
+    const scale = isMobile ? 1.0 : 1.15
+    // Position offset - move down on desktop
+    const yOffset = isMobile ? 0 : -0.4
+
     return (
-        <points ref={meshRef} geometry={geometry}>
+        <points ref={meshRef} geometry={geometry} scale={scale} position={[0, yOffset, 0]}>
             <shaderMaterial
                 ref={materialRef}
                 attach="material"
