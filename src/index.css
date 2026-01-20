@@ -335,6 +335,17 @@ h6 {
   .overlay-header nav {
     left: 50%;
   }
+
+  .archive-container {
+    gap: 3rem;
+    padding: 20vh 3rem 10vh;
+  }
+
+  .archive-item {
+    width: calc(50% - 2rem);
+    min-width: 280px;
+    max-width: 500px;
+  }
 }
 
 /* Mobile Styles */
