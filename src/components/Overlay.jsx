@@ -35,6 +35,7 @@ export default function Overlay({ isLoading }) {
             <footer className="overlay-footer">
                 <span className="footer-text footer-text-full">NOW POKING IN:</span>
                 <span className="footer-text footer-text-short">NOW IN:</span>
+                <span className="footer-text footer-text-mobile">CURRENTLY POKING IN:</span>
                 <span className="location-button">{location}</span>
             </footer>
         </div>

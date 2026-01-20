@@ -436,9 +436,9 @@ function MorphingShape({ onLoadComplete }) {
     }, [shapes, geometry])
 
     // Scale factor - bigger on desktop, normal on mobile
-    const scale = isMobile ? 1.0 : 1.15
+    const scale = isMobile ? 1.0 : 1.2
     // Position offset - move down on desktop
-    const yOffset = isMobile ? 0 : -0.4
+    const yOffset = isMobile ? 0 : -0.45
 
     return (
         <points ref={meshRef} geometry={geometry} scale={scale} position={[0, yOffset, 0]}>

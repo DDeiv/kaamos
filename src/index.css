@@ -225,7 +225,7 @@ h6 {
   position: absolute;
   white-space: nowrap;
   font-size: 6.5rem;
-  font-weight: 900;
+  font-weight: 750;
   text-transform: uppercase;
   opacity: 0.1;
   animation: scroll 30s linear infinite;
@@ -295,6 +295,10 @@ h6 {
   display: none;
 }
 
+.footer-text-mobile {
+  display: none;
+}
+
 .location-button {
   border: 2px solid #ffffff;
   border-radius: 50px;
@@ -315,7 +319,7 @@ h6 {
 }
 
 /* Tablet Styles */
-@media (max-width: 1024px) {
+@media (max-width: 1220px) {
   .footer-text-full {
     display: none;
   }
@@ -325,16 +329,16 @@ h6 {
   }
 
   .overlay-footer {
-    padding-left: calc(40% + 0.7rem);
+    padding-left: 50%;
   }
 
   .overlay-header nav {
-    left: 40%;
+    left: 50%;
   }
 }
 
 /* Mobile Styles */
-@media (max-width: 768px) {
+@media (max-width: 890px) {
   .overlay-container {
     padding: 1rem;
     z-index: 100 !important;
@@ -350,6 +354,8 @@ h6 {
   .overlay-header h1 {
     font-size: 22px;
     padding-left: 0.3rem;
+    line-height: 1;
+    margin: 0;
   }
 
   .overlay-header nav {
@@ -359,10 +365,21 @@ h6 {
 
   .overlay-header ul {
     align-items: flex-end;
+    margin: 0;
+    padding: 0;
   }
 
   .overlay-header ul a {
     font-size: 22px;
+    line-height: 1;
+  }
+
+  .footer-text-short {
+    display: none;
+  }
+
+  .footer-text-mobile {
+    display: inline;
   }
 
   .scrolling-text {
