@@ -299,7 +299,10 @@ h6 {
 }
 
 .location-button {
-  border: 2px solid #ffffff;
+  position: fixed;
+  bottom: 1rem;
+  right: 2%;
+  border: 2px solid #000000;
   border-radius: 50px;
   padding: 0.35em 0.75em 0.3em;
   line-height: 1;
@@ -308,10 +311,19 @@ h6 {
   justify-content: center;
   pointer-events: auto;
   font-size: 30px;
+  font-weight: 400;
+  background: transparent;
+  color: #000000;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+  z-index: 200;
 }
 
-a.location-button:hover {
+.location-button:hover {
   text-decoration: none;
+  background: #000000;
+  color: #f7f7f7;
+  border-color: #000000;
 }
 
 .footer-info {
@@ -415,6 +427,8 @@ a.location-button:hover {
 
   .location-button {
     font-size: 15px;
+    bottom: 2%;
+    right: 2%;
   }
 
   /* Archive mobile styles */

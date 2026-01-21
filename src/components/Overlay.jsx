@@ -24,28 +24,34 @@ export default function Overlay({ isLoading }) {
     }, [])
 
     return (
-        <div className="overlay-container">
-            <header className="overlay-header">
-                <h1>KAAMOS</h1>
-                <nav>
-                    <ul>
-                        <li><a href="#">BOOK A TATTOO</a></li>
-                        <li><a href="#">PREVIOUS WORK</a></li>
-                        <li><a href="#">AVAILABLE DESIGNS</a></li>
-                        <li><a href="#">INFO & ABOUT</a></li>
-                    </ul>
-                </nav>
-            </header>
-            <footer className="overlay-footer">
-                <span className="footer-text footer-text-full">NOW POKING IN:</span>
-                <span className="footer-text footer-text-short">NOW IN:</span>
-                <span className="footer-text footer-text-mobile">CURRENTLY POKING IN:</span>
-                {locationLink ? (
-                    <a href={locationLink} target="_blank" rel="noopener noreferrer" className="location-button">{location}</a>
-                ) : (
-                    <span className="location-button">{location}</span>
-                )}
-            </footer>
-        </div>
+        <>
+            <div className="overlay-container">
+                <header className="overlay-header">
+                    <h1>KAAMOS</h1>
+                    <nav>
+                        <ul>
+                            <li><a href="#">BOOK A TATTOO</a></li>
+                            <li><a href="#">PREVIOUS WORK</a></li>
+                            <li><a href="#">AVAILABLE DESIGNS</a></li>
+                            <li><a href="#">INFO & ABOUT</a></li>
+                        </ul>
+                    </nav>
+                </header>
+                <footer className="overlay-footer">
+                    <span className="footer-text footer-text-full">NOW POKING IN:</span>
+                    <span className="footer-text footer-text-short">NOW IN:</span>
+                    <span className="footer-text footer-text-mobile">CURRENTLY POKING IN:</span>
+                </footer>
+            </div>
+            <a
+                href={locationLink || '#'}
+                target={locationLink ? '_blank' : '_self'}
+                rel={locationLink ? 'noopener noreferrer' : undefined}
+                className="location-button"
+                onClick={locationLink ? undefined : (e) => e.preventDefault()}
+            >
+                {location}
+            </a>
+        </>
     )
 }
