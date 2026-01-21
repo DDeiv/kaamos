@@ -307,7 +307,7 @@ h6 {
   position: fixed;
   bottom: 1rem;
   right: 2%;
-  border: 2px solid #000000;
+  border: 1.5px solid #000000;
   border-radius: 50px;
   padding: 0.35em 0.75em 0.3em;
   line-height: 1;
