@@ -29,10 +29,8 @@ export default function Archive() {
     return (
         <div className="archive-container">
             {images.map((img, index) => {
-                // More random offset for cascade effect
-                const randomOffsetY = Math.floor(Math.random() * 200) - 100 // -100px to +100px
-                const randomOffsetX = Math.floor(Math.random() * 120) - 60 // -60px to +60px
-                const randomScale = 0.85 + Math.random() * 0.3 // 0.85 to 1.15
+                const randomOffsetY = Math.floor(Math.random() * 250) - 125
+                const randomOffsetX = Math.floor(Math.random() * 140) - 70
 
                 return (
                     <div
@@ -41,11 +39,10 @@ export default function Archive() {
                         style={{
                             marginTop: `${randomOffsetY}px`,
                             marginLeft: `${randomOffsetX}px`,
-                            transform: `scale(${randomScale})`,
                         }}
                     >
                         <img
-                            src={img.image ? urlFor(img.image).width(600).url() : img.url}
+                            src={img.image ? urlFor(img.image).width(500).url() : img.url}
                             alt={img.title || 'Archive Image'}
                             loading="lazy"
                         />

@@ -9,5 +9,11 @@ export default {
             type: 'string',
             description: 'The city shown in "CURRENTLY POKING IN: ___"',
         },
+        {
+            name: 'locationLink',
+            title: 'Location Link',
+            type: 'url',
+            description: 'URL to open when the location button is clicked (opens in new tab)',
+        },
     ],
 }

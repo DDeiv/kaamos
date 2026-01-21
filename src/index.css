@@ -107,37 +107,35 @@ h6 {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 6rem;
-  padding: 20vh 6rem 10vh;
-  /* Start closer to scrolling text */
+  gap: 4rem;
+  padding: 20vh 4rem 10vh;
   width: 100%;
-  max-width: 1600px;
+  max-width: 1800px;
   margin: 0 auto;
   pointer-events: none;
   align-items: flex-start;
   justify-content: center;
   position: relative;
   z-index: 50;
-  /* Archive images */
-  /* Let clicks pass through to canvas if needed, but images have pointer-events: auto */
 }
 
 .archive-item {
-  width: calc(45% - 4rem);
-  min-width: 400px;
-  max-width: 750px;
+  width: calc(35% - 2rem);
+  max-width: 320px;
   pointer-events: auto;
   transition: transform 0.3s ease;
   position: relative;
   z-index: 50;
 }
 
+.archive-item:hover {
+  transform: scale(1.12);
+}
 
 .archive-item img {
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 4px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
@@ -278,7 +276,7 @@ h6 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-left: calc(50% + 0.7rem);
+  padding-left: 50%;
   padding-right: 2%;
   padding-bottom: 0.5rem;
   font-size: 39px;
@@ -310,6 +308,10 @@ h6 {
   justify-content: center;
   pointer-events: auto;
   font-size: 30px;
+}
+
+a.location-button:hover {
+  text-decoration: none;
 }
 
 .footer-info {
@@ -344,9 +346,8 @@ h6 {
   }
 
   .archive-item {
-    width: calc(50% - 2rem);
-    min-width: 280px;
-    max-width: 500px;
+    width: calc(40% - 2rem);
+    max-width: 280px;
   }
 }
 
@@ -428,5 +429,9 @@ h6 {
     width: 85%;
     max-width: 400px;
     min-width: unset;
+  }
+
+  .archive-item:hover {
+    transform: none;
   }
 }

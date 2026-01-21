@@ -3,14 +3,18 @@ import { client } from '../sanityClient'
 
 export default function Overlay({ isLoading }) {
     const [location, setLocation] = useState('BERLIN')
+    const [locationLink, setLocationLink] = useState(null)
 
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const query = '*[_type == "siteSettings"][0]{ location }'
+                const query = '*[_type == "siteSettings"][0]{ location, locationLink }'
                 const settings = await client.fetch(query)
                 if (settings?.location) {
                     setLocation(settings.location.toUpperCase())
+                }
+                if (settings?.locationLink) {
+                    setLocationLink(settings.locationLink)
                 }
             } catch (err) {
                 console.error("Failed to fetch site settings:", err)
@@ -36,7 +40,11 @@ export default function Overlay({ isLoading }) {
                 <span className="footer-text footer-text-full">NOW POKING IN:</span>
                 <span className="footer-text footer-text-short">NOW IN:</span>
                 <span className="footer-text footer-text-mobile">CURRENTLY POKING IN:</span>
-                <span className="location-button">{location}</span>
+                {locationLink ? (
+                    <a href={locationLink} target="_blank" rel="noopener noreferrer" className="location-button">{location}</a>
+                ) : (
+                    <span className="location-button">{location}</span>
+                )}
             </footer>
         </div>
     )
