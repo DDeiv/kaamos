@@ -28,6 +28,7 @@ export default function Overlay({ isLoading, activeSection }) {
             case 'bio': return 'INFO & ABOUT'
             case 'previous-work': return 'PREVIOUS WORK'
             case 'available-work': return 'AVAILABLE WORK'
+            case 'booking': return 'BOOK A TATTOO'
             default: return 'KAAMOS'
         }
     }
@@ -39,7 +40,7 @@ export default function Overlay({ isLoading, activeSection }) {
                     <h1>{getSectionTitle()}</h1>
                     <nav>
                         <ul>
-                            <li><a href="#">BOOK A TATTOO</a></li>
+                            <li><a href="#booking" className={activeSection === 'booking' ? 'active' : ''}>BOOK A TATTOO</a></li>
                             <li><a href="#bio" className={activeSection === 'bio' ? 'active' : ''}>INFO & ABOUT</a></li>
                             <li><a href="#previous-work" className={activeSection === 'previous-work' ? 'active' : ''}>PREVIOUS WORK</a></li>
                             <li><a href="#available-work" className={activeSection === 'available-work' ? 'active' : ''}>AVAILABLE WORK</a></li>

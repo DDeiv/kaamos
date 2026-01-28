@@ -3,30 +3,33 @@ import React from 'react'
 export default function LegalFooter() {
     return (
         <footer className="legal-footer">
-            <div className="impressum-content">
-                <div>
-                    <strong>KAAMOS TATTOO</strong><br />
-                    Berlin, Germany<br />
+            <div className="footer-grid">
+                <div className="footer-block">
+                    <h3>STUDIO</h3>
+                    <p>KAAMOS TATTOO<br />BERLIN, DE</p>
                 </div>
-                <div>
-                    <strong>CONTACT</strong><br />
-                    info@kaamos.com<br />
-                    +49 (0) 000 0000000
+                <div className="footer-block">
+                    <h3>CONTACT</h3>
+                    <p><a href="mailto:info@kaamos.com">INFO@KAAMOS.COM</a></p>
                 </div>
-                <div>
-                    <strong>TAX INFO</strong><br />
-                    Steuernummer: 00/000/00000<br />
-                    VAT ID: DE 000000000
+                <div className="footer-block">
+                    <h3>LEGAL</h3>
+                    <ul className="legal-list">
+                        <li><a href="#">IMPRESSUM</a></li>
+                        <li><a href="#">DATENSCHUTZ</a></li>
+                        <li><a href="#">AGB</a></li>
+                    </ul>
+                </div>
+                <div className="footer-block">
+                    <h3>SOCIAL</h3>
+                    <ul className="legal-list">
+                        <li><a href="#">INSTAGRAM</a></li>
+                    </ul>
                 </div>
             </div>
-            <div className="legal-links">
-                <a href="#">Impressum (Legal Notice)</a>
-                <a href="#">Privacy Policy (Datenschutzerklärung)</a>
-                <a href="#">Terms & Conditions</a>
-                <a href="#">Cookie Settings</a>
-            </div>
-            <div className="copyright">
-                © {new Date().getFullYear()} KAAMOS. All rights reserved.
+            <div className="footer-bottom">
+                <span>© {new Date().getFullYear()} KAAMOS</span>
+                <span>ALL RIGHTS RESERVED</span>
             </div>
         </footer>
     )

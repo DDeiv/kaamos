@@ -3,6 +3,8 @@ import { Canvas } from '@react-three/fiber'
 import Scene from './components/Scene'
 import Overlay from './components/Overlay'
 import Archive from './components/Archive'
+import BookingForm from './components/BookingForm'
+import LegalFooter from './components/LegalFooter'
 import { client } from './sanityClient'
 
 function App() {
@@ -60,7 +62,7 @@ function App() {
       }
 
       // More precise active section detection
-      const sectionIds = ['bio', 'previous-work', 'available-work']
+      const sectionIds = ['bio', 'previous-work', 'available-work', 'booking']
       const activationPoint = window.innerHeight * 0.4 // 40% from top
 
       let foundActive = ''
@@ -135,6 +137,10 @@ function App() {
         </div>
 
         <Archive />
+
+        <BookingForm />
+
+        <LegalFooter />
       </div>
     </>
   )

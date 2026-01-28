@@ -5,18 +5,18 @@ export default function BookingForm() {
         <section id="booking" className="booking-section">
             <form className="booking-form" onSubmit={(e) => e.preventDefault()}>
                 <div className="form-group">
-                    <label htmlFor="name">Full Name</label>
-                    <input type="text" id="name" className="booking-input" placeholder="Your name" required />
+                    <label htmlFor="name">01. WHO ARE YOU?</label>
+                    <input type="text" id="name" className="booking-input" placeholder="NAME / SURNAME" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="email">Email</label>
-                    <input type="email" id="email" className="booking-input" placeholder="your@email.com" required />
+                    <label htmlFor="email">02. WHERE TO REPLY?</label>
+                    <input type="email" id="email" className="booking-input" placeholder="EMAIL ADDRESS" required />
                 </div>
                 <div className="form-group">
-                    <label htmlFor="idea">Tattoo Idea</label>
-                    <textarea id="idea" className="booking-input booking-textarea" placeholder="Describe your project, size, and placement" required></textarea>
+                    <label htmlFor="idea">03. YOUR VISION?</label>
+                    <textarea id="idea" className="booking-input booking-textarea" placeholder="DESCRIBE YOUR IDEA, PLACEMENT & SIZE" required></textarea>
                 </div>
-                <button type="submit" className="submit-button">Send Request</button>
+                <button type="submit" className="submit-button">SUBMIT REQUEST</button>
             </form>
         </section>
     )
