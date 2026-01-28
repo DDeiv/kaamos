@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { client } from '../sanityClient'
 
-export default function Overlay({ isLoading }) {
+export default function Overlay({ isLoading, activeSection }) {
     const [location, setLocation] = useState('BERLIN')
     const [locationLink, setLocationLink] = useState(null)
 
@@ -23,17 +23,26 @@ export default function Overlay({ isLoading }) {
         fetchSettings()
     }, [])
 
+    const getSectionTitle = () => {
+        switch (activeSection) {
+            case 'bio': return 'INFO & ABOUT'
+            case 'previous-work': return 'PREVIOUS WORK'
+            case 'available-work': return 'AVAILABLE WORK'
+            default: return 'KAAMOS'
+        }
+    }
+
     return (
         <>
             <div className="overlay-container">
                 <header className="overlay-header">
-                    <h1>KAAMOS</h1>
+                    <h1>{getSectionTitle()}</h1>
                     <nav>
                         <ul>
                             <li><a href="#">BOOK A TATTOO</a></li>
-                            <li><a href="#">PREVIOUS WORK</a></li>
-                            <li><a href="#">AVAILABLE DESIGNS</a></li>
-                            <li><a href="#">INFO & ABOUT</a></li>
+                            <li><a href="#bio" className={activeSection === 'bio' ? 'active' : ''}>INFO & ABOUT</a></li>
+                            <li><a href="#previous-work" className={activeSection === 'previous-work' ? 'active' : ''}>PREVIOUS WORK</a></li>
+                            <li><a href="#available-work" className={activeSection === 'available-work' ? 'active' : ''}>AVAILABLE WORK</a></li>
                         </ul>
                     </nav>
                 </header>

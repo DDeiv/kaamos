@@ -164,6 +164,16 @@ h6 {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
+/* Archive Structure */
+.archive-wrapper {
+  width: 100%;
+}
+
+.archive-section {
+  width: 100%;
+  padding-top: 20vh;
+  padding-bottom: 40vh;
+}
 
 /* Overlay Styles */
 .overlay-container {
@@ -231,6 +241,11 @@ h6 {
 .overlay-header ul a {
   font-size: 42px;
   font-weight: 400;
+  transition: text-decoration 0.2s ease;
+}
+
+.overlay-header ul a.active {
+  text-decoration: underline;
 }
 
 .overlay-main {
@@ -485,5 +500,148 @@ h6 {
 
   .archive-item:hover {
     transform: none;
+  }
+}
+
+/* Booking Form Styles */
+.booking-section {
+  position: relative;
+  z-index: 60;
+  padding: 10vh 1% 20vh 1%;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+  margin-right: 50%;
+  box-sizing: border-box;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 24px;
+  text-transform: uppercase;
+  font-weight: 550;
+  letter-spacing: -0.02em;
+}
+
+.booking-input {
+  background: transparent;
+  border: none;
+  border-bottom: 2.5px solid var(--color-text);
+  padding: 0.75rem 0;
+  font-family: var(--font-main);
+  font-size: 36px;
+  color: var(--color-text);
+  outline: none;
+  border-radius: 0;
+  transition: border-bottom-color 0.3s ease;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+.booking-input:focus {
+  border-bottom-color: #000;
+}
+
+.booking-textarea {
+  min-height: 180px;
+  resize: none;
+}
+
+.booking-input::placeholder {
+  opacity: 0.2;
+  color: var(--color-text);
+}
+
+.submit-button {
+  background: var(--color-text);
+  color: #ffffff;
+  border: none;
+  padding: 1.25rem 2.5rem;
+  font-size: 32px;
+  text-transform: uppercase;
+  font-weight: 550;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background 0.3s ease, color 0.3s ease;
+  margin-top: 1rem;
+}
+
+.submit-button:hover {
+  background: #000;
+  color: #fff;
+}
+
+/* Legal Footer Styles */
+.legal-footer {
+  position: relative;
+  z-index: 60;
+  padding: 10vh 2% 8vh 2%;
+  background-color: #000000;
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  font-size: 16px;
+  margin-top: 10vh;
+}
+
+.legal-links {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.legal-links a {
+  font-size: 16px;
+  font-weight: 400;
+  color: #ffffff;
+  opacity: 0.6;
+  transition: opacity 0.3s ease;
+}
+
+.legal-links a:hover {
+  opacity: 1;
+}
+
+.impressum-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 4rem;
+  line-height: 1.5;
+}
+
+.impressum-content strong {
+  font-size: 20px;
+  display: block;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.05em;
+}
+
+.copyright {
+  opacity: 0.4;
+  font-size: 14px;
+}
+
+@media (max-width: 890px) {
+  .booking-input {
+    font-size: 24px;
+  }
+
+  .submit-button {
+    font-size: 24px;
+    width: 100%;
   }
 }

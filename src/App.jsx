@@ -9,6 +9,7 @@ function App() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [isCanvasVisible, setIsCanvasVisible] = React.useState(false)
   const [bio, setBio] = React.useState(null)
+  const [activeSection, setActiveSection] = React.useState('')
   const canvasRef = useRef(null)
   const fogRef = useRef(null)
   const textRef = useRef(null)
@@ -22,13 +23,13 @@ function App() {
   // Detect if device is mobile
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768
 
-  const handleLoadComplete = () => {
+  const handleLoadComplete = React.useCallback(() => {
     setIsLoading(false)
     // Faster delay for desktop (500ms), slower for mobile (500ms)
     setTimeout(() => {
       setIsCanvasVisible(true)
     }, 500)
-  }
+  }, [])
 
   useEffect(() => {
     const fetchBio = async () => {
@@ -57,11 +58,38 @@ function App() {
       if (textRef.current) {
         textRef.current.style.opacity = 1 - progress
       }
+
+      // More precise active section detection
+      const sectionIds = ['bio', 'previous-work', 'available-work']
+      const activationPoint = window.innerHeight * 0.4 // 40% from top
+
+      let foundActive = ''
+      for (const id of sectionIds) {
+        const el = document.getElementById(id)
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          // If the section's top has passed the activation point
+          // AND the bottom hasn't passed it yet
+          if (rect.top <= activationPoint && rect.bottom >= activationPoint) {
+            foundActive = id
+            break
+          }
+        }
+      }
+
+      // Special case: if we are at the very top, clear everything
+      if (window.scrollY < window.innerHeight * 0.3) {
+        setActiveSection('')
+      } else if (foundActive) {
+        setActiveSection(foundActive)
+      }
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [bio])
 
   return (
     <>
@@ -89,7 +117,7 @@ function App() {
         }}
       />
 
-      <Overlay />
+      <Overlay activeSection={activeSection} />
 
       <div className="scroll-container">
         <div ref={textRef} className="scrolling-text-container">
@@ -98,7 +126,7 @@ function App() {
           </div>
         </div>
 
-        <div className="bio-section">
+        <div id="bio" className="bio-section">
           {(bio || DEFAULT_BIO).map((para, i) => (
             <p key={i} className="bio-paragraph">
               {para}
