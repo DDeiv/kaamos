@@ -104,6 +104,26 @@ h6 {
   mask-image: linear-gradient(to right, transparent 8%, black 25%, black 75%, transparent 92%);
 }
 
+/* Bio Section Styles */
+.bio-section {
+  position: relative;
+  z-index: 60;
+  margin-top: 110vh;
+  margin-left: 1%;
+  margin-right: 51%;
+  margin-bottom: 30vh;
+  pointer-events: auto;
+}
+
+.bio-paragraph {
+  font-size: 32px;
+  line-height: 1.15;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  text-transform: none;
+  letter-spacing: -0.03em;
+}
+
 /* Archive Styles */
 .archive-container {
   display: flex;
@@ -112,7 +132,7 @@ h6 {
   gap: 4rem;
   padding: 4rem;
   padding-top: 0;
-  margin-top: 115vh;
+  margin-top: 0;
   width: 100%;
   max-width: 1800px;
   margin-left: auto;
@@ -439,6 +459,17 @@ h6 {
   }
 
   /* Archive mobile styles */
+  .bio-section {
+    margin-top: 100vh;
+    margin-left: 5%;
+    margin-right: 5%;
+    margin-bottom: 10vh;
+  }
+
+  .bio-paragraph {
+    font-size: 18px;
+  }
+
   .archive-container {
     flex-direction: column;
     gap: 4rem;

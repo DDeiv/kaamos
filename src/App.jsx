@@ -74,6 +74,19 @@ function App() {
             KAAMOS LEMME PUT INK UNDER YOUR SKIN • KAAMOS LEMME PUT INK UNDER YOUR SKIN • KAAMOS LEMME PUT INK UNDER YOUR SKIN •
           </div>
         </div>
+
+        <div className="bio-section">
+          <p className="bio-paragraph">
+            Pin Ya drifts through the streets like a quiet rumor, a tattooer with ink-stained fingers and a needle that hums with intention. She pokes, pauses, smiles, and pokes again, leaving tiny constellations behind on skin that once was empty. No rush, no noise—just the soft ritual of point after point, story after story.
+          </p>
+          <p className="bio-paragraph">
+            People say you don’t find Pin Ya, she finds you. One moment you’re minding your business, the next there’s a gentle tap, a sharp little hello, and suddenly your arm remembers something it never knew. Her needle dances, curious and precise, mapping thoughts, symbols, and half-forgotten dreams.
+          </p>
+          <p className="bio-paragraph">
+            When she moves on, there’s always a trace left behind: a mark, a grin, a faint sting, and the feeling that you’ve been lightly rearranged. Pin Ya keeps walking, needle ready, already looking for the next place to poke meaning into the world.
+          </p>
+        </div>
+
         <Archive />
       </div>
     </>
