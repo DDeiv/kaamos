@@ -121,7 +121,7 @@ function App() {
         }}
       />
 
-      <Overlay activeSection={activeSection} />
+      <Overlay activeSection={activeSection} legalModalOpen={legalModal.isOpen} />
 
       <div className="scroll-container">
         <div ref={textRef} className="scrolling-text-container">
