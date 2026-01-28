@@ -1,5 +1,5 @@
 import { defineConfig } from 'sanity'
-import { deskTool } from 'sanity/desk'
+import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
 import particleShape from './sanity_schemas/particleShape'
 import archiveImage from './sanity_schemas/archiveImage'
@@ -14,7 +14,7 @@ export default defineConfig({
   dataset: 'production',
 
   plugins: [
-    deskTool(),
+    structureTool(),
     visionTool(),
   ],
 

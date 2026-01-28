@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react(), qrcode()],
   base: '/kaamos/',
   server: {
+    port: 5173,
     host: true, // Expose to network
     allowedHosts: true
   }

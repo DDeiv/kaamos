@@ -15,5 +15,11 @@ export default {
             type: 'url',
             description: 'URL to open when the location button is clicked (opens in new tab)',
         },
+        {
+            name: 'bio',
+            title: 'Bio Text',
+            type: 'text',
+            description: 'The text displayed in the scroll sequence. Use empty lines for paragraphs.',
+        },
     ],
 }

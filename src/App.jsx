@@ -3,13 +3,21 @@ import { Canvas } from '@react-three/fiber'
 import Scene from './components/Scene'
 import Overlay from './components/Overlay'
 import Archive from './components/Archive'
+import { client } from './sanityClient'
 
 function App() {
   const [isLoading, setIsLoading] = React.useState(true)
   const [isCanvasVisible, setIsCanvasVisible] = React.useState(false)
+  const [bio, setBio] = React.useState(null)
   const canvasRef = useRef(null)
   const fogRef = useRef(null)
   const textRef = useRef(null)
+
+  const DEFAULT_BIO = [
+    "Pin Ya drifts through the streets like a quiet rumor, a tattooer with ink-stained fingers and a needle that hums with intention. She pokes, pauses, smiles, and pokes again, leaving tiny constellations behind on skin that once was empty. No rush, no noise—just the soft ritual of point after point, story after story.",
+    "People say you don’t find Pin Ya, she finds you. One moment you’re minding your business, the next there’s a gentle tap, a sharp little hello, and suddenly your arm remembers something it never knew. Her needle dances, curious and precise, mapping thoughts, symbols, and half-forgotten dreams.",
+    "When she moves on, there’s always a trace left behind: a mark, a grin, a faint sting, and the feeling that you’ve been lightly rearranged. Pin Ya keeps walking, needle ready, already looking for the next place to poke meaning into the world."
+  ]
 
   // Detect if device is mobile
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768
@@ -23,6 +31,21 @@ function App() {
   }
 
   useEffect(() => {
+    const fetchBio = async () => {
+      try {
+        const query = '*[_type == "siteSettings"][0]{ bio }'
+        const data = await client.fetch(query)
+        if (data?.bio) {
+          // Split by numeric or double newlines to split paragraphs
+          const paragraphs = data.bio.split(/\n\s*\n/).filter(p => p.trim())
+          setBio(paragraphs)
+        }
+      } catch (err) {
+        console.error("Failed to fetch bio from Sanity:", err)
+      }
+    }
+    fetchBio()
+
     const handleScroll = () => {
       const progress = Math.min(window.scrollY / window.innerHeight, 1)
       if (canvasRef.current) {
@@ -76,15 +99,11 @@ function App() {
         </div>
 
         <div className="bio-section">
-          <p className="bio-paragraph">
-            Pin Ya drifts through the streets like a quiet rumor, a tattooer with ink-stained fingers and a needle that hums with intention. She pokes, pauses, smiles, and pokes again, leaving tiny constellations behind on skin that once was empty. No rush, no noise—just the soft ritual of point after point, story after story.
-          </p>
-          <p className="bio-paragraph">
-            People say you don’t find Pin Ya, she finds you. One moment you’re minding your business, the next there’s a gentle tap, a sharp little hello, and suddenly your arm remembers something it never knew. Her needle dances, curious and precise, mapping thoughts, symbols, and half-forgotten dreams.
-          </p>
-          <p className="bio-paragraph">
-            When she moves on, there’s always a trace left behind: a mark, a grin, a faint sting, and the feeling that you’ve been lightly rearranged. Pin Ya keeps walking, needle ready, already looking for the next place to poke meaning into the world.
-          </p>
+          {(bio || DEFAULT_BIO).map((para, i) => (
+            <p key={i} className="bio-paragraph">
+              {para}
+            </p>
+          ))}
         </div>
 
         <Archive />
