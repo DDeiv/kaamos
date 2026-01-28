@@ -5,6 +5,7 @@ import Overlay from './components/Overlay'
 import Archive from './components/Archive'
 import BookingForm from './components/BookingForm'
 import LegalFooter from './components/LegalFooter'
+import LegalModal from './components/LegalModal'
 import { client } from './sanityClient'
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   const [isCanvasVisible, setIsCanvasVisible] = React.useState(false)
   const [bio, setBio] = React.useState(null)
   const [activeSection, setActiveSection] = React.useState('')
+  const [legalModal, setLegalModal] = React.useState({ isOpen: false, type: 'terms' })
   const canvasRef = useRef(null)
   const fogRef = useRef(null)
   const textRef = useRef(null)
@@ -140,8 +142,14 @@ function App() {
 
         <BookingForm />
 
-        <LegalFooter />
+        <LegalFooter onOpenModal={(type) => setLegalModal({ isOpen: true, type })} />
       </div>
+
+      <LegalModal
+        isOpen={legalModal.isOpen}
+        type={legalModal.type}
+        onClose={() => setLegalModal({ ...legalModal, isOpen: false })}
+      />
     </>
   )
 }

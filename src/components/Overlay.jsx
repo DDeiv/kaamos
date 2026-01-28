@@ -23,21 +23,11 @@ export default function Overlay({ isLoading, activeSection }) {
         fetchSettings()
     }, [])
 
-    const getSectionTitle = () => {
-        switch (activeSection) {
-            case 'bio': return 'INFO & ABOUT'
-            case 'previous-work': return 'PREVIOUS WORK'
-            case 'available-work': return 'AVAILABLE WORK'
-            case 'booking': return 'BOOK A TATTOO'
-            default: return 'KAAMOS'
-        }
-    }
-
     return (
         <>
             <div className="overlay-container">
                 <header className="overlay-header">
-                    <h1>{getSectionTitle()}</h1>
+                    <h1>KAAMOS</h1>
                     <nav>
                         <ul>
                             <li><a href="#booking" className={activeSection === 'booking' ? 'active' : ''}>BOOK A TATTOO</a></li>
