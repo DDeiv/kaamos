@@ -14,7 +14,17 @@ export default function BookingForm() {
                 </div>
                 <div className="form-group">
                     <label htmlFor="idea">03. YOUR VISION</label>
-                    <textarea id="idea" className="booking-input booking-textarea" placeholder="DESCRIBE YOUR IDEA, PLACEMENT & SIZE" required></textarea>
+                    <textarea
+                        id="idea"
+                        className="booking-input booking-textarea"
+                        placeholder="DESCRIBE YOUR IDEA, PLACEMENT & SIZE"
+                        required
+                        rows="1"
+                        onInput={(e) => {
+                            e.target.style.height = 'inherit';
+                            e.target.style.height = `${e.target.scrollHeight}px`;
+                        }}
+                    ></textarea>
                 </div>
                 <button type="submit" className="submit-button">SUBMIT REQUEST</button>
             </form>

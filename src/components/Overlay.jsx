@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { client } from '../sanityClient'
+import { Arrow } from './icons/Arrow'
 
 export default function Overlay({ isLoading, activeSection, legalModalOpen }) {
     const [location, setLocation] = useState('BERLIN')
@@ -32,10 +33,22 @@ export default function Overlay({ isLoading, activeSection, legalModalOpen }) {
                     <h1>KAAMOS</h1>
                     <nav>
                         <ul>
-                            <li><a href="#booking" className={isBookingActive ? 'active' : ''}>BOOK A TATTOO</a></li>
-                            <li><a href="#bio" className={activeSection === 'bio' ? 'active' : ''}>INFO & ABOUT</a></li>
-                            <li><a href="#previous-work" className={activeSection === 'previous-work' ? 'active' : ''}>PREVIOUS WORK</a></li>
-                            <li><a href="#available-work" className={activeSection === 'available-work' ? 'active' : ''}>AVAILABLE WORK</a></li>
+                            <li>
+                                <Arrow className={`menu-arrow ${activeSection === 'bio' ? 'visible' : ''}`} />
+                                <a href="#bio" className={activeSection === 'bio' ? 'active' : ''}>INFO & ABOUT</a>
+                            </li>
+                            <li>
+                                <Arrow className={`menu-arrow ${activeSection === 'previous-work' ? 'visible' : ''}`} />
+                                <a href="#previous-work" className={activeSection === 'previous-work' ? 'active' : ''}>PREVIOUS WORK</a>
+                            </li>
+                            <li>
+                                <Arrow className={`menu-arrow ${activeSection === 'available-work' ? 'visible' : ''}`} />
+                                <a href="#available-work" className={activeSection === 'available-work' ? 'active' : ''}>AVAILABLE WORK</a>
+                            </li>
+                            <li>
+                                <Arrow className={`menu-arrow ${isBookingActive ? 'visible' : ''}`} />
+                                <a href="#booking" className={isBookingActive ? 'active' : ''}>BOOK A TATTOO</a>
+                            </li>
                         </ul>
                     </nav>
                 </header>
@@ -59,7 +72,7 @@ export default function Overlay({ isLoading, activeSection, legalModalOpen }) {
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 aria-label="Back to landing page"
             >
-                ↑
+                <Arrow className="custom-arrow-svg" />
             </button>
         </>
     )

@@ -252,8 +252,29 @@ h6 {
 }
 
 .overlay-header ul a.active {
-  text-decoration: underline;
+  text-decoration: none;
 }
+
+.overlay-header ul li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.menu-arrow {
+  width: 32px;
+  height: auto;
+  opacity: 0;
+  margin-left: -40px;
+  /* Position to the left of the text */
+  margin-bottom: 0.15em;
+}
+
+.menu-arrow.visible {
+  opacity: 1;
+}
+
 
 .overlay-main {
   flex: 1;
@@ -563,7 +584,8 @@ h6 {
   background-size: 100% 2px;
   background-repeat: no-repeat;
   background-position: bottom;
-  padding: 0.5rem 0.5rem;
+  background-position: bottom;
+  padding: 1.1rem 0.5rem;
   font-family: var(--font-main);
   font-size: 28px;
   color: var(--color-text);
@@ -584,8 +606,16 @@ h6 {
 }
 
 .booking-textarea {
-  min-height: 100px;
+  min-height: auto;
   resize: none;
+  overflow: hidden;
+  padding: 1.1rem 0.5rem;
+}
+
+.custom-arrow-svg {
+  transform: rotate(-90deg);
+  width: 25px;
+  height: 25px;
 }
 
 .submit-button {
@@ -686,6 +716,10 @@ h6 {
 
   .booking-form {
     gap: 1.5rem;
+  }
+
+  .booking-textarea {
+    min-height: 3em;
   }
 
   .booking-title {
@@ -793,6 +827,11 @@ h6 {
     pointer-events: auto;
     z-index: 10000;
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  }
+
+  .menu-arrow {
+    width: 22px;
+    margin-left: -30px;
   }
 }
 
