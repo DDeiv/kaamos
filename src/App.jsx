@@ -60,7 +60,12 @@ function App() {
         fogRef.current.style.opacity = progress * 0.5
       }
       if (textRef.current) {
-        textRef.current.style.opacity = 1 - (progress * 0.6)
+        // Find the actual text element inside the container
+        const scrollText = textRef.current.querySelector('.scrolling-text');
+        if (scrollText) {
+          scrollText.style.opacity = Math.max(0, 0.1 * (1 - progress * 2.5));
+        }
+        textRef.current.style.opacity = 1 - progress * 1.5;
       }
 
       // More precise active section detection
@@ -105,7 +110,11 @@ function App() {
           transition: `opacity ${isMobile ? '2.5s' : '0.5s'} ease-in-out`
         }}
       >
-        <Canvas camera={{ position: [0, 0, 5], fov: 45 }}>
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 45 }}
+          dpr={window.devicePixelRatio > 1.5 ? 2 : 1}
+          gl={{ antialias: true, powerPreference: "high-performance" }}
+        >
           <Suspense fallback={null}>
             <Scene onLoadComplete={handleLoadComplete} />
           </Suspense>

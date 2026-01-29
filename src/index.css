@@ -408,6 +408,26 @@ h6 {
   text-align: right;
 }
 
+/* Ultra Wide Breakpoint */
+@media (min-width: 1900px) {
+  :root {
+    font-size: 42px;
+  }
+
+  .archive-container {
+    max-width: 2400px;
+    gap: 6rem;
+  }
+
+  .archive-item {
+    max-width: 450px;
+  }
+
+  .bio-paragraph {
+    font-size: 42px;
+  }
+}
+
 /* Tablet Styles */
 @media (max-width: 1150px) {
   .footer-text-full {

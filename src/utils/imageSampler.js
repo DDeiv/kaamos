@@ -8,6 +8,7 @@ export function sampleParticlesFromImage(imageUrl, particleCount = 10000) {
         img.src = imageUrl
 
         img.onload = () => {
+            console.log('Sampling particles from:', imageUrl)
             const canvas = document.createElement('canvas')
             const ctx = canvas.getContext('2d')
 

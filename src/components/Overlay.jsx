@@ -76,7 +76,7 @@ export default function Overlay({ isLoading, activeSection, legalModalOpen }) {
                             </li>
                             <li>
                                 <Arrow className={`menu-arrow ${isBookingActive ? 'visible' : ''} ${isMobile ? 'mobile-hidden' : ''}`} />
-                                <a href="#booking" className={isBookingActive ? 'active' : ''}>BOOK A TATTOO</a>
+                                <a href="#booking" className={isBookingActive ? 'active' : ''}>BOOK A TATTOO!</a>
                             </li>
                         </ul>
                     </nav>

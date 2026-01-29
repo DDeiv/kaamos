@@ -12,22 +12,24 @@ const OrganicMaterial = {
         uMouse: { value: new THREE.Vector3() },
         uMouseStrength: { value: 0.8 },
         uIsMobile: { value: 0.0 },
+        uDPR: { value: 1.0 },
         uColor1: { value: new THREE.Vector3(0.0, 0.0, 0.0) },
         uColor2: { value: new THREE.Vector3(0.796, 0.027, 0.020) },
         uColor3: { value: new THREE.Vector3(0.843, 1.0, 0.0) }
     },
     vertexShader: `
+    precision highp float;
     uniform float uTime;
     uniform float uMorphFactor;
     uniform vec3 uMouse;
     uniform float uMouseStrength;
     uniform float uIsMobile;
+    uniform float uDPR;
     attribute vec3 targetPosition;
-    attribute float smoothedSpeed;
     varying vec2 vUv;
     varying float vDisplacement;
     varying float vSpeed;
-    varying float vSmoothedSpeed;
+    varying float vFade;
 
     // Simplex noise function
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -90,9 +92,9 @@ const OrganicMaterial = {
 
       // Calculate speed proxy based on distance to target
       vSpeed = length(targetPosition - position);
-
-      // Pass smoothed speed to fragment shader
-      vSmoothedSpeed = smoothedSpeed;
+      
+      // Calculate a fade value to prevent 'popping' on some browsers
+      vFade = smoothstep(5.0, 2.0, length(position.z));
 
       // Noise calculation for color variation only
       float noise = snoise(mixedPos * 2.0 + uTime * 0.15);
@@ -114,19 +116,21 @@ const OrganicMaterial = {
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
 
-      // Very small particles for ultra-sharp, highly defined shapes
-      float baseSize = 2.2;
-      float mobileSize = 1.8;
-      gl_PointSize = mix(baseSize, mobileSize, uIsMobile);
+      // RADICAL FIX FOR WINDOWS: 
+      // Instead of complex mix/step, we use a fixed physical size.
+      // 1.2 is the "sweet spot" for that sharp ink-grain look.
+      gl_PointSize = 1.2 * uDPR;
     }
   `,
     fragmentShader: `
+    precision highp float;
     uniform vec3 uColor1;
     uniform vec3 uColor2;
     uniform vec3 uColor3;
+    uniform float uMorphFactor;
     varying float vDisplacement;
     varying float vSpeed;
-    varying float vSmoothedSpeed;
+    varying float vFade;
 
     void main() {
       vec2 center = gl_PointCoord - 0.5;
@@ -136,14 +140,19 @@ const OrganicMaterial = {
 
       if (alpha < 0.01) discard;
 
-      // Map smoothed speed to t (0.0 to 1.0)
-      float speedT = smoothstep(0.0, 3.5, vSmoothedSpeed);
+      // Map speed to t (0.0 to 1.0)
+      float speedT = smoothstep(0.0, 4.0, vSpeed);
+      
+      // Dynamic motion 'glow' - peaks in the middle of the morph
+      // This replaces the CPU-bound smoothedSpeed logic with a cheaper shader version
+      float motionPulse = sin(uMorphFactor * 3.14159);
+      speedT *= motionPulse;
 
       // Map noise to [0, 1]
       float noiseT = vDisplacement * 0.5 + 0.5;
 
       // Combine noise and speed for continuous gradient value
-      float t = mix(noiseT * 0.15, 1.0, speedT * 0.9);
+      float t = mix(noiseT * 0.2, 1.0, speedT * 0.85);
 
       // Continuous three-color gradient using uniform colors
       // t = 0.0-0.5: Color1 -> Color2
@@ -157,8 +166,8 @@ const OrganicMaterial = {
         finalColor = mix(uColor2, uColor3, (t - 0.5) * 2.0);
       }
       
-      // More opaque for better definition
-      gl_FragColor = vec4(finalColor, alpha * 0.6);
+      // Reduced alpha for better transparency on standard screens
+      gl_FragColor = vec4(finalColor, alpha * 0.55 * vFade);
     }
   `
 }
@@ -180,8 +189,9 @@ function MorphingShape({ onLoadComplete }) {
             window.innerWidth < 768
     }, [])
 
-    // Use 120,000 particles (corrected from 1.2M)
-    const PARTICLE_COUNT = 150000
+    // Optimized to 100k. On Windows (DPR 1), 150k is too dense 
+    // because pixels are larger, making the cloud look like a "solid wall".
+    const PARTICLE_COUNT = 100000
 
     // Load colors from Sanity
     useEffect(() => {
@@ -292,13 +302,6 @@ function MorphingShape({ onLoadComplete }) {
         }
         geo.setAttribute('normal', new THREE.BufferAttribute(normals, 3))
 
-        // Smoothed speed attribute for gradual color transitions
-        const smoothedSpeeds = new Float32Array(PARTICLE_COUNT)
-        for (let i = 0; i < PARTICLE_COUNT; i++) {
-            smoothedSpeeds[i] = 0.0
-        }
-        geo.setAttribute('smoothedSpeed', new THREE.BufferAttribute(smoothedSpeeds, 1))
-
         return geo
     }, [])
 
@@ -347,6 +350,7 @@ function MorphingShape({ onLoadComplete }) {
         if (materialRef.current) {
             materialRef.current.uniforms.uTime.value = state.clock.elapsedTime
             materialRef.current.uniforms.uIsMobile.value = isMobile ? 1.0 : 0.0
+            materialRef.current.uniforms.uDPR.value = state.viewport.dpr
 
             // Apply colors every frame to ensure they stick
             if (colors) {
@@ -383,34 +387,9 @@ function MorphingShape({ onLoadComplete }) {
                 }
 
                 setMorphProgress(newProgress)
-
-                // Simple smooth easing
                 const t = newProgress
                 const smoothProgress = t * t * (3 - 2 * t)
                 materialRef.current.uniforms.uMorphFactor.value = smoothProgress
-
-                // Update smoothed speed values with lerp for gradual color transitions
-                if (meshRef.current && meshRef.current.geometry && newProgress < 1.0) {
-                    const geo = meshRef.current.geometry
-                    const positions = geo.attributes.position.array
-                    const targetPositions = geo.attributes.targetPosition.array
-                    const smoothedSpeeds = geo.attributes.smoothedSpeed.array
-
-                    const lerpFactor = 0.02 // Lower = smoother transitions (0.02 = ~2.5 second transition)
-
-                    for (let i = 0; i < PARTICLE_COUNT; i++) {
-                        const idx = i * 3
-                        const dx = targetPositions[idx] - positions[idx]
-                        const dy = targetPositions[idx + 1] - positions[idx + 1]
-                        const dz = targetPositions[idx + 2] - positions[idx + 2]
-                        const actualSpeed = Math.sqrt(dx * dx + dy * dy + dz * dz)
-
-                        // Lerp smoothed speed towards actual speed
-                        smoothedSpeeds[i] += (actualSpeed - smoothedSpeeds[i]) * lerpFactor
-                    }
-
-                    geo.attributes.smoothedSpeed.needsUpdate = true
-                }
             }
         }
     })
