@@ -724,6 +724,14 @@ h6 {
 
   .booking-textarea {
     min-height: 3em;
+    border-bottom: 2px solid rgba(26, 26, 26, 0.2);
+    background-image: none;
+  }
+
+  @media (max-width: 485px) {
+    .booking-textarea {
+      padding: 1.5rem 0.5rem;
+    }
   }
 
   .booking-title {
@@ -754,11 +762,13 @@ h6 {
 
   .booking-input {
     font-size: 20px;
-    background-image: linear-gradient(to right, rgba(26, 26, 26, 0.6) 0%, rgba(26, 26, 26, 0) 90%);
+    background-image: none;
+    border-bottom: 2px solid rgba(26, 26, 26, 0.2);
   }
 
   .booking-input:focus {
-    background-image: linear-gradient(to right, rgba(26, 26, 26, 1) 0%, rgba(26, 26, 26, 0) 90%);
+    background-image: none;
+    border-bottom-color: rgba(26, 26, 26, 1);
   }
 
   .legal-footer {
