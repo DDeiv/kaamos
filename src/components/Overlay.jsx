@@ -5,13 +5,13 @@ import { Arrow } from './icons/Arrow'
 export default function Overlay({ isLoading, activeSection, legalModalOpen }) {
     const [location, setLocation] = useState('BERLIN')
     const [locationLink, setLocationLink] = useState(null)
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 890)
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 1190)
     const availableWorkRef = useRef(null)
     const [menuArrowPos, setMenuArrowPos] = useState({ top: 0, left: 0 })
 
     useEffect(() => {
         const handleResize = () => {
-            setIsMobile(window.innerWidth <= 890)
+            setIsMobile(window.innerWidth <= 1190)
             if (availableWorkRef.current) {
                 const rect = availableWorkRef.current.getBoundingClientRect()
                 setMenuArrowPos({

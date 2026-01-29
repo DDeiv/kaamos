@@ -12,7 +12,7 @@ export default function Archive() {
                 const sanityImages = await client.fetch(query)
 
                 if (sanityImages && sanityImages.length > 0) {
-                    const isMobile = window.innerWidth <= 890
+                    const isMobile = window.innerWidth <= 1190
                     const imagesWithOffsets = sanityImages.map(img => ({
                         ...img,
                         randomOffsetY: Math.floor(Math.random() * (isMobile ? 80 : 250)) - (isMobile ? 40 : 125),

@@ -438,7 +438,7 @@ h6 {
 }
 
 /* Mobile Styles */
-@media (max-width: 890px) {
+@media (max-width: 1190px) {
   .overlay-container {
     padding: 2%;
     z-index: 100 !important;
@@ -515,21 +515,42 @@ h6 {
     margin-bottom: 10vh;
   }
 
+  @media (min-width: 690px) {
+    .bio-section {
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+  }
+
   .bio-paragraph {
     font-size: 18px;
   }
 
   .archive-container {
-    flex-direction: column;
-    gap: 4rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
     padding: 10vh 1.5rem 10vh;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .archive-item {
-    width: 85%;
+    width: calc(45% - 1.5rem);
     max-width: 400px;
     min-width: unset;
+  }
+
+  @media (max-width: 890px) {
+    .archive-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 4rem;
+    }
+
+    .archive-item {
+      width: 85%;
+    }
   }
 
   .archive-item:hover {
@@ -709,7 +730,7 @@ h6 {
   text-decoration: underline;
 }
 
-@media (max-width: 890px) {
+@media (max-width: 1190px) {
   .booking-section {
     margin-right: 0;
     margin-left: 0;
@@ -918,7 +939,7 @@ h6 {
   white-space: pre-wrap;
 }
 
-@media (max-width: 890px) {
+@media (max-width: 1190px) {
   .legal-modal-overlay {
     padding: 1rem;
   }

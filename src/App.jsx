@@ -60,7 +60,7 @@ function App() {
         fogRef.current.style.opacity = progress * 0.5
       }
       if (textRef.current) {
-        textRef.current.style.opacity = 1 - progress
+        textRef.current.style.opacity = 1 - (progress * 0.6)
       }
 
       // More precise active section detection
