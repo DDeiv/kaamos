@@ -116,10 +116,8 @@ const OrganicMaterial = {
 
       gl_Position = projectionMatrix * modelViewMatrix * vec4(finalPos, 1.0);
 
-      // RADICAL FIX FOR WINDOWS: 
-      // Instead of complex mix/step, we use a fixed physical size.
-      // 1.2 is the "sweet spot" for that sharp ink-grain look.
-      gl_PointSize = 1.2 * uDPR;
+      // Smaller on mobile (0.9), normal on desktop (1.2)
+      gl_PointSize = mix(1.2, 0.9, uIsMobile) * uDPR;
     }
   `,
     fragmentShader: `
@@ -189,9 +187,7 @@ function MorphingShape({ onLoadComplete }) {
             window.innerWidth < 768
     }, [])
 
-    // Optimized to 100k. On Windows (DPR 1), 150k is too dense 
-    // because pixels are larger, making the cloud look like a "solid wall".
-    const PARTICLE_COUNT = 100000
+    const PARTICLE_COUNT = isMobile ? 100000 : 140000
 
     // Load colors from Sanity
     useEffect(() => {

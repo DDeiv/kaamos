@@ -29,10 +29,9 @@ function App() {
 
   const handleLoadComplete = React.useCallback(() => {
     setIsLoading(false)
-    // Faster delay for desktop (500ms), slower for mobile (500ms)
     setTimeout(() => {
       setIsCanvasVisible(true)
-    }, 500)
+    }, 300)
   }, [])
 
   useEffect(() => {
@@ -107,7 +106,7 @@ function App() {
         className="fixed-background"
         style={{
           opacity: isCanvasVisible ? 1 : 0,
-          transition: `opacity ${isMobile ? '2.5s' : '0.5s'} ease-in-out`
+          transition: `opacity ${isMobile ? '2s' : '0.5s'} ease-in-out`
         }}
       >
         <Canvas
